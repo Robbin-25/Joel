@@ -1,1 +1,436 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weingut Friedel Hermann</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="output.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    .font-playfair {
+      font-family: 'Playfair Display', serif;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
 
+<body class="bg-gray-50">
+
+
+    <!-- navbar -->
+    <nav class="flex justify-between items-center px-8 py-4 border-b">
+      <div class="text-lg font-semibold">Weingut Hermann</div>
+      <nav class="space-x-8 hidden md:flex">
+        <a href="#" class="text-gray-700 hover:text-black">Home</a>
+        <a href="#" class="text-gray-700 hover:text-black">Shop</a>
+        <a href="#" class="text-gray-700 hover:text-black">Blog</a>
+        <a href="#" class="text-gray-700 hover:text-black">Kontakt</a>
+      </nav>
+      <button class="bg-black text-white px-4 py-2 rounded hidden md:block">Checkout</button>
+      <div class="md:hidden">
+        <button id="menu-btn" class="focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+
+    <!-- hero -->
+    <section class="flex flex-col md:flex-row items-center justify-between px-8 py-16 max-w-7xl mx-auto">
+      <div class="md:w-1/2 mb-12 md:mb-0">
+        <p class="text-sm text-gray-500 mb-2">Discover the Finest Wines</p>
+        <h1 class="text-5xl font-playfair font-semibold text-gray-900 leading-snug mb-6">
+          Weingut Friedel <br /> Hermann
+        </h1>
+        <p class="text-gray-600 text-lg mb-6">Explore our exquisite collection of premium wines.</p>
+        <button class="bg-black text-white px-6 py-3 rounded font-semibold">Shop Now</button>
+      </div>
+      <div class="md:w-1/2 flex justify-center relative">
+          <img src="Wein.png" alt="Wine" class="w-full h-auto object-contain max-h-[450px]" />
+      </div>
+    </section>
+
+
+    <!-- section 1 -->
+    <section class="bg-gray-900 text-white py-16 px-8">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 mb-8 md:mb-0">
+          <p class="text-sm mb-2">Crafted with Care</p>
+          <h2 class="text-3xl font-playfair mb-4">Exceptional Flavors</h2>
+          <p class="mb-6 text-gray-300">From bold reds to crisp whites, our diverse wine offerings cater to every taste. Discover the perfect pairing for your next gather...</p>
+          <button class="bg-white text-black px-4 py-2 rounded">Explore More</button>
+        </div>
+        <div class="md:w-1/2 relative top-[100px]">
+          <img src="Wein.png" alt="Wine Bottles" class="max-h-[400px] w-auto">
+        </div>
+      </div>
+    </section>
+
+
+    <!-- section 2 -->
+    <section class="bg-white text-center py-8 px-8">
+      <div class="my-6 text-gray-400">---+✧✧✧+---</div>
+      <p class="text-sm text-gray-500">Nahe Wein</p>
+      <h2 class="text-3xl font-playfair my-4">Nur das Beste für Sie</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Indulge in the depth and complexity of our carefully curated wines, each bottle a testament to the art of winemaking</p>
+      <div class="my-6 text-gray-400">---+✧✧✧+---</div>
+    </section>
+
+
+<!-- kataloge -->
+<section class="py-16 bg-white overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <h2 class="text-4xl font-playfair italic font-semibold">Unsere Weine</h2>
+      <p class="text-gray-600 mt-2 max-w-2xl mx-auto">Erleben Sie unsere besten Tropfen – direkt vom Weingut Friedel Hermann</p>
+    </div>
+
+    <div class="flex justify-end mb-4 gap-2">
+      <button data-carousel="katalog" data-dir="-1" class="carousel-btn bg-white p-2 rounded-full shadow hover:bg-gray-100">&larr;</button>
+      <button data-carousel="katalog" data-dir="1" class="carousel-btn bg-white p-2 rounded-full shadow hover:bg-gray-100">&rarr;</button>
+    </div>
+
+    <div class="relative">
+      <div id="carousel-katalog" class="carousel flex overflow-x-auto gap-6 scroll-smooth snap-x snap-mandatory no-scrollbar touch-pan-x">
+        <!-- JavaScript cards -->
+      </div>
+    </div>
+  </div>
+
+
+    <!-- section 3 -->
+    <section class="bg-gray-900 text-white py-16 pl-8">
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 mx-8 md:mb-0">
+          <p class="text-sm mb-2">Crafted with Care</p>
+          <h2 class="text-3xl font-playfair mb-4">Exceptional Flavors</h2>
+          <p class="mb-6 text-gray-300">From bold reds to crisp whites, our diverse wine offerings cater to every taste. Discover the perfect pairing for your next gather...</p>
+          <button class="bg-white text-black px-4 py-2 rounded">Explore More</button>
+        </div>
+        <div class="md:w-1/2 flex justify-end">
+          <img src="Wein.png" alt="Wine Bottles" class="max-h-[400px] w-auto">
+        </div>
+      </div>
+    </section>
+
+    
+    <!-- bestseller -->
+    <section class="bg-gray-50 py-20 px-4">
+      <div class="max-w-6xl mx-auto text-center mb-12">
+        <h2 class="text-4xl font-playfair mb-2">Unsere Bestseller</h2>
+        <p class="text-gray-600">Das beste aus unserem Wein und deshalb auch das bester für sie</p>
+      </div>
+      <div class="space-y-32">
+
+        <div class="relative max-w-6xl mx-auto">
+          <div class="relative z-10 flex flex-col md:flex-row items-start h-auto justify-start gap-6">
+            <div class="relative w-[500px] z-20">
+              <div class="bg-black rounded-3xl pt-6 px-28 relative z-20 shadow-[inset_0_-40px_10px_rgba(255,255,255,0.4)]">
+                <img src="wine.svg" alt="Wein" class="w-full h-auto relative z-30" />
+              </div>
+            </div>
+            <div class="relative z-30 -ml-20 my-auto">
+              <div class="bg-white bg-opacity-60 backdrop-blur-sm p-12 rounded-3xl text-center md:text-left max-w-sm shadow-xl">
+                <h3 class="text-lg font-playfair font-semibold mb-2">2020 Gulden­taler Sonnenberg – Dornfelder trocken</h3>
+                <p class="text-gray-700 mb-3 text-sm">Lorem ipsum dolor sit amet, consectetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam</p>
+                <div class="flex justify-center md:justify-start gap-3">
+                  <button class="bg-black text-white px-3 py-1.5 rounded text-sm">Add to Cart</button>
+                  <button class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded text-sm">More Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative max-w-6xl mx-auto">
+          <div class="relative z-10 flex flex-col md:flex-row-reverse items-start justify-start gap-6">
+            <div class="relative w-[500px] z-20">
+              <div class="bg-black rounded-3xl pt-6 px-28 relative z-20 shadow-[inset_0_-40px_10px_rgba(255,255,255,0.4)]">
+                <img src="wine.svg" alt="Wein" class="w-full h-auto relative z-30" />
+              </div>
+            </div>
+            <div class="relative z-30 -mr-20 my-auto">
+              <div class="bg-white bg-opacity-60 backdrop-blur-sm p-12 rounded-3xl text-center md:text-left max-w-sm shadow-xl">
+                <h3 class="text-lg font-playfair font-semibold mb-2">2020 Gulden­taler Sonnenberg – Dornfelder trocken</h3>
+                <p class="text-gray-700 mb-3 text-sm">Lorem ipsum dolor sit amet, consectetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam</p>
+                <div class="flex justify-center md:justify-start gap-3">
+                  <button class="bg-black text-white px-3 py-1.5 rounded text-sm">Add to Cart</button>
+                  <button class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded text-sm">More Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative max-w-6xl mx-auto">
+          <div class="relative z-10 flex flex-col md:flex-row items-start justify-start gap-6">
+            <div class="relative w-[500px] z-20">
+              <div class="bg-black rounded-3xl pt-6 px-28 relative z-20 shadow-[inset_0_-40px_10px_rgba(255,255,255,0.4)]">
+                <img src="wine.svg" alt="Wein" class="w-full h-auto relative z-30" />
+              </div>
+            </div>
+            <div class="relative z-30 -ml-20 my-auto">
+              <div class="bg-white bg-opacity-60 backdrop-blur-sm p-12 rounded-3xl text-center md:text-left max-w-sm shadow-xl">
+                <h3 class="text-lg font-playfair font-semibold mb-2">2020 Gulden­taler Sonnenberg – Dornfelder trocken</h3>
+                <p class="text-gray-700 mb-3 text-sm">Lorem ipsum dolor sit amet, consectetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam</p>
+                <div class="flex justify-center md:justify-start gap-3">
+                  <button class="bg-black text-white px-3 py-1.5 rounded text-sm">Add to Cart</button>
+                  <button class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded text-sm">More Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- Kunden -->
+<section class="py-16 bg-white overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <h2 class="text-4xl font-playfair italic font-semibold">Was unsere Kunden sagen</h2>
+      <p class="text-gray-600 mt-2 max-w-2xl mx-auto">Erfahren Sie, warum Weinliebhaber weltweit begeistert sind</p>
+    </div>
+
+    <div class="flex justify-end mb-4 gap-2">
+      <button data-carousel="review" data-dir="-1" class="carousel-btn bg-white p-2 rounded-full shadow hover:bg-gray-100">&larr;</button>
+      <button data-carousel="review" data-dir="1" class="carousel-btn bg-white p-2 rounded-full shadow hover:bg-gray-100">&rarr;</button>
+    </div>
+
+    <div class="relative">
+      <div id="carousel-review" class="carousel flex overflow-x-auto gap-6 scroll-smooth snap-x snap-mandatory no-scrollbar touch-pan-x">
+        <!-- JavaScript cards -->
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+    <!-- anmelden -->
+<section class="bg-[#1f1f1f] py-24 px-4">
+  <div class="bg-white rounded-3xl max-w-3xl mx-auto text-center px-6 py-12 shadow-md">
+    <h2 class="text-2xl md:text-3xl font-playfair font-semibold mb-6">
+      <span class="italic">Ein sehr <strong class="not-italic">Guter</strong> Wein aus der <strong class="not-italic">Nahe</strong></span>
+    </h2>
+
+    <p class="text-gray-700 text-base md:text-lg mb-8 max-w-xl mx-auto">
+      “Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+      eirmod tempor invidunt ut labore et dolore magna.”
+    </p>
+
+    <form method="POST" action="/newsletter" class="flex flex-col items-center gap-4 w-full">
+      <div class="text-left w-full max-w-md mx-auto">
+        <label for="email" class="block text-sm font-medium text-gray-800 mb-1">Ihr E-mail-Adresse</label>
+        <div class="flex flex-col md:flex-row items-center gap-4">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="Ihre E-Mail..."
+            class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-black outline-none transition-all w-full md:w-auto"
+          />
+          <button
+            type="submit"
+            class="bg-black text-white font-semibold px-6 py-2 rounded-md hover:bg-gray-800 transition-all"
+          >
+            Anmelden
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <p class="text-sm text-gray-500 mt-6">Wir respektieren Ihre Privatsphäre. Manche nicht ;)</p>
+  </div>
+</section>
+
+
+
+  <footer class="bg-white py-12 px-6">
+    <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 border-t pt-12 border-gray-200">
+
+      <div class="space-y-4">
+        <h2 class="text-4xl font-playfair italic">YOURLOGO</h2>
+        <p class="uppercase font-bold tracking-widest text-sm">Company</p>
+        <p class="text-gray-600">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
+        <div class="w-24 border-t-2 border-gray-600 mt-4 mb-4"></div>
+        <div class="flex gap-4">
+          <a href="#" class="h-10 w-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="h-10 w-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="h-10 w-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition">
+            <i class="fab fa-weixin"></i>
+          </a>
+          <a href="#" class="h-10 w-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="space-y-4 border-l border-gray-300 pl-6">
+        <h3 class="text-xl font-bold">Quick Link’s</h3>
+        <ul class="space-y-2">
+          <li><a href="#" class="hover:text-gray-700">Home</a></li>
+          <li><a href="#" class="hover:text-gray-700">About Us</a></li>
+          <li><a href="#" class="hover:text-gray-700">Our Services</a></li>
+          <li><a href="#" class="hover:text-gray-700">How It Works</a></li>
+          <li><a href="#" class="hover:text-gray-700">Why choose us</a></li>
+          <li><a href="#" class="hover:text-gray-700">Testimonials</a></li>
+        </ul>
+      </div>
+
+      <div class="space-y-6 border-l border-gray-300 pl-6">
+        <h3 class="text-xl font-bold">Contact Us</h3>
+
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 flex justify-center items-center border rounded-full">
+            <i class="fas fa-phone"></i>
+          </div>
+          <div>
+            <p class="font-bold">Home</p>
+            <p class="text-gray-600 text-sm">1267298759742</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 flex justify-center items-center border rounded-full">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div>
+            <p class="font-bold">Email Us</p>
+            <p class="text-gray-600 text-sm">Joel@gmail.com</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 flex justify-center items-center border rounded-full">
+            <i class="fas fa-location-dot"></i>
+          </div>
+          <div>
+            <p class="font-bold">Loloacation</p>
+            <p class="text-gray-600 text-sm">Guldental</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+<script>
+  // === DATEN ===
+  const katalogProdukte = [
+    { name: "Riesling Spätlese", beschreibung: "Frisch und fruchtig", bild: "wein1.jpg" },
+    { name: "Grauburgunder", beschreibung: "Trocken & sanft", bild: "wein2.jpg" },
+    { name: "Dornfelder Rotwein", beschreibung: "Kräftig und würzig", bild: "wein3.jpg" },
+    { name: "Riesling Spätlese", beschreibung: "Frisch und fruchtig", bild: "wein1.jpg" },
+    { name: "Grauburgunder", beschreibung: "Trocken & sanft", bild: "wein2.jpg" },
+    { name: "Dornfelder Rotwein", beschreibung: "Kräftig und würzig", bild: "wein3.jpg" },
+    { name: "Riesling Spätlese", beschreibung: "Frisch und fruchtig", bild: "wein1.jpg" },
+    { name: "Grauburgunder", beschreibung: "Trocken & sanft", bild: "wein2.jpg" },
+    { name: "Dornfelder Rotwein", beschreibung: "Kräftig und würzig", bild: "wein3.jpg" },
+  ];
+
+  const kundenMeinungen = [
+    { text: "Einfach der beste Wein, den ich je probiert habe!", name: "Joel Friedrich", rolle: "Wein Genießer", bild: "avatar1.jpg" },
+    { text: "Fantastischer Geschmack und tolle Beratung!", name: "Serhat Frank", rolle: "Wein Liebhaber", bild: "avatar2.jpg" },
+    { text: "Jedes Jahr aufs Neue begeistert!", name: "Florian", rolle: "Wein Verkoster", bild: "avatar3.jpg" },
+    { text: "Einfach der beste Wein, den ich je probiert habe!", name: "Joel Friedrich", rolle: "Wein Genießer", bild: "avatar1.jpg" },
+    { text: "Fantastischer Geschmack und tolle Beratung!", name: "Serhat Frank", rolle: "Wein Liebhaber", bild: "avatar2.jpg" },
+    { text: "Jedes Jahr aufs Neue begeistert!", name: "Florian", rolle: "Wein Verkoster", bild: "avatar3.jpg" },
+    { text: "Einfach der beste Wein, den ich je probiert habe!", name: "Joel Friedrich", rolle: "Wein Genießer", bild: "avatar1.jpg" },
+    { text: "Fantastischer Geschmack und tolle Beratung!", name: "Serhat Frank", rolle: "Wein Liebhaber", bild: "avatar2.jpg" },
+    { text: "Jedes Jahr aufs Neue begeistert!", name: "Florian", rolle: "Wein Verkoster", bild: "avatar3.jpg" },
+  ];
+
+  // === RENDERING ===
+  function renderCards(containerId, daten, type) {
+    const container = document.getElementById(containerId);
+    daten.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "w-[300px] md:w-[350px] bg-gray-50 rounded-2xl p-6 flex-shrink-0 snap-start shadow";
+      if (type === "katalog") {
+        card.innerHTML = `
+          <img src="${item.bild}" alt="${item.name}" class="w-full h-48 object-cover rounded-xl mb-4">
+          <h3 class="text-xl font-bold mb-2">${item.name}</h3>
+          <p class="text-gray-600 text-sm">${item.beschreibung}</p>
+        `;
+      } else {
+        card.innerHTML = `
+          <p class="text-xl text-gray-800 mb-4">&ldquo;${item.text}&rdquo;</p>
+          <div class="flex items-center gap-4">
+            <img src="${item.bild}" alt="${item.name}" class="w-10 h-10 rounded-full" />
+            <div>
+              <p class="font-bold">${item.name}</p>
+              <p class="text-sm text-gray-500">${item.rolle}</p>
+            </div>
+          </div>
+        `;
+      }
+      container.appendChild(card);
+    });
+  }
+
+  renderCards("carousel-katalog", katalogProdukte, "katalog");
+  renderCards("carousel-review", kundenMeinungen, "review");
+
+  // === SCROLLING ===
+  const carouselButtons = document.querySelectorAll(".carousel-btn");
+  const pauseFlags = {};
+
+  carouselButtons.forEach(button => {
+    const dir = parseInt(button.dataset.dir);
+    const carouselId = "carousel-" + button.dataset.carousel;
+    const carousel = document.getElementById(carouselId);
+
+    button.addEventListener("click", () => {
+      const card = carousel.querySelector("div");
+      const scrollAmount = 4*card.offsetWidth + 4*24;
+      carousel.scrollBy({ left: scrollAmount * dir, behavior: "smooth" });
+      pauseFlags[carouselId] = true;
+      setTimeout(() => pauseFlags[carouselId] = false, 5000);
+    });
+
+    // Auto scroll
+    setInterval(() => {
+      if (!pauseFlags[carouselId]) {
+        const card = carousel.querySelector("div");
+        const scrollAmount = 2*card.offsetWidth + 2*24;
+        carousel.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
+    }, 7000);
+  });
+</script>
+
+
+
+
+</body>
+</html>
