@@ -72,31 +72,9 @@
   <button class="w-full bg-black text-white px-8 py-3 rounded-b">Checkout</button>
 </nav>
 
-<script>
-  const btn = document.getElementById('menu-btn');
-  const menu = document.getElementById('mobile-menu');
-
-  btn.addEventListener('click', () => {
-    // Toggle max-height to animate open/close smoothly
-    if (menu.style.maxHeight && menu.style.maxHeight !== "0px") {
-      menu.style.maxHeight = "0";
-    } else {
-      menu.style.maxHeight = menu.scrollHeight + "px";
-    }
-  });
-
-  // Optional: Beim Resize das Menü schließen, falls größer als md
-  window.addEventListener('resize', () => {
-    if(window.innerWidth >= 768) {
-      menu.style.maxHeight = "0";
-    }
-  });
-</script>
-
-
 
     <!-- hero -->
-    <section class="flex flex-col md:flex-row items-center justify-between px-8 py-16 max-w-7xl mx-auto">
+    <section class="flex flex-col md:flex-row items-center justify-between px-8 py-16 max-w-7xl mx-auto text-center md:text-left">
       <div class="md:w-1/2 mb-12 md:mb-0">
         <p class="text-sm text-gray-500 mb-2">Discover the Finest Wines</p>
         <h1 class="text-5xl font-playfair font-semibold text-gray-900 leading-snug mb-6">
@@ -113,7 +91,7 @@
 
     <!-- section 1 -->
     <section class="bg-gray-900 text-white py-16 px-8">
-      <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center text-center md:text-left">
         <div class="md:w-1/2 mb-8 md:mb-0">
           <p class="text-sm mb-2">Crafted with Care</p>
           <h2 class="text-3xl font-playfair mb-4">Exceptional Flavors</h2>
@@ -160,8 +138,8 @@
 
     <!-- section 3 -->
     <section class="bg-gray-900 text-white py-16 pl-8">
-      <div class="flex flex-col md:flex-row items-center">
-        <div class="md:w-1/2 mx-8 md:mb-0">
+      <div class="flex flex-col md:flex-row items-center gap-12">
+        <div class="md:w-1/2 mx-8 md:mb-0 text-center md:text-left">
           <p class="text-sm mb-2">Crafted with Care</p>
           <h2 class="text-3xl font-playfair mb-4">Exceptional Flavors</h2>
           <p class="mb-6 text-gray-300">From bold reds to crisp whites, our diverse wine offerings cater to every taste. Discover the perfect pairing for your next gather...</p>
@@ -296,7 +274,7 @@
           />
           <button
             type="submit"
-            class="bg-black text-white font-semibold px-6 py-2 rounded-md hover:bg-gray-800 transition-all"
+            class="bg-black text-white w-full md:w-auto font-semibold px-6 py-2 rounded-md hover:bg-gray-800 transition-all"
           >
             Anmelden
           </button>
@@ -309,14 +287,13 @@
 </section>
 
 
-
-  <footer class="bg-white py-12 px-6">
+  <footer class="bg-white py-12 px-6 text-center text-xl md:text-lg md:text-left">
     <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 border-t pt-12 border-gray-200">
 
-      <div class="space-y-4">
+      <div class="flex flex-col space-y-4 items-center md:items-start">
         <h2 class="text-4xl font-playfair italic">YOURLOGO</h2>
-        <p class="uppercase font-bold tracking-widest text-sm">Company</p>
-        <p class="text-gray-600">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
+        <p class="uppercase font-bold tracking-widest text-xl md:text-lg">Company</p>
+        <p class="text-gray-600 text-lg md:text-sm">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
         <div class="w-24 border-t-2 border-gray-600 mt-4 mb-4"></div>
         <div class="flex gap-4">
           <a href="#" class="h-10 w-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition">
@@ -334,8 +311,8 @@
         </div>
       </div>
 
-      <div class="space-y-4 border-l border-gray-300 pl-6">
-        <h3 class="text-xl font-bold">Quick Link’s</h3>
+      <div class="space-y-4 border-t md:border-t-0 md:border-l border-gray-300 pl-6 pt-6">
+        <h3 class="text-2xl md:text-xl font-bold">Quick Link’s</h3>
         <ul class="space-y-2">
           <li><a href="#" class="hover:text-gray-700">Home</a></li>
           <li><a href="#" class="hover:text-gray-700">About Us</a></li>
@@ -346,16 +323,16 @@
         </ul>
       </div>
 
-      <div class="space-y-6 border-l border-gray-300 pl-6">
-        <h3 class="text-xl font-bold">Contact Us</h3>
-
+      <div class="flex flex-col space-y-6 border-t md:border-t-0 md:border-l border-gray-300 pl-6 pt-6 items-center md:items-start text-left">
+        <h3 class="text-2xl md:text-xl font-bold">Contact Us</h3>
+      <div>
         <div class="flex items-start gap-4">
           <div class="w-10 h-10 flex justify-center items-center border rounded-full">
             <i class="fas fa-phone"></i>
           </div>
           <div>
             <p class="font-bold">Home</p>
-            <p class="text-gray-600 text-sm">1267298759742</p>
+            <p class="text-gray-600 text-lg md:text-sm">1267298759742</p>
           </div>
         </div>
         <div class="flex items-start gap-4">
@@ -364,7 +341,7 @@
           </div>
           <div>
             <p class="font-bold">Email Us</p>
-            <p class="text-gray-600 text-sm">Joel@gmail.com</p>
+            <p class="text-gray-600 text-lg md:text-sm">Joel@gmail.com</p>
           </div>
         </div>
         <div class="flex items-start gap-4">
@@ -373,16 +350,37 @@
           </div>
           <div>
             <p class="font-bold">Loloacation</p>
-            <p class="text-gray-600 text-sm">Guldental</p>
+            <p class="text-gray-600 text-lg md:text-sm">Guldental</p>
           </div>
         </div>
       </div>
-
+      </div>
     </div>
   </footer>
 
 
 <script>
+// NAV
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  btn.addEventListener('click', () => {
+    // Toggle max-height to animate open/close smoothly
+    if (menu.style.maxHeight && menu.style.maxHeight !== "0px") {
+      menu.style.maxHeight = "0";
+    } else {
+      menu.style.maxHeight = menu.scrollHeight + "px";
+    }
+  });
+
+  // Optional: Beim Resize das Menü schließen, falls größer als md
+  window.addEventListener('resize', () => {
+    if(window.innerWidth >= 768) {
+      menu.style.maxHeight = "0";
+    }
+  });
+
+
   // === DATEN ===
   const katalogProdukte = [
     { name: "Riesling Spätlese", beschreibung: "Frisch und fruchtig", bild: "wein1.jpg" },
@@ -466,8 +464,6 @@
     }, 7000);
   });
 </script>
-
-
 
 
 </body>
