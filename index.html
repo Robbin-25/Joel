@@ -1,161 +1,1113 @@
-<head>
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+session_start();
+
+// Am Anfang Ihrer index.php einfügen
+function checkWebsiteStatus() {
+    if (file_exists('website_offline.lock')) {
+        // Website komplett offline
+        header('HTTP/1.1 503 Service Unavailable');
+        echo '<!DOCTYPE html>
+<html><head><title>Website Offline</title></head>
+<body style="background:#0f0f0f;color:#fff;text-align:center;padding:100px;font-family:Arial;">
+<h1>🔧 Website ist offline</h1>
+<p>Die Website ist derzeit nicht verfügbar.</p>
+</body></html>';
+        exit;
+    } elseif (file_exists('website_maintenance.lock')) {
+        // Wartungsmodus aktiv
+        header('HTTP/1.1 503 Service Unavailable');
+        echo '<!DOCTYPE html>
+<html><head><title>Wartung</title></head>
+<body style="background:#1a1a1a;color:#fff;text-align:center;padding:100px;font-family:Arial;">
+<h1>⚠️ Wartungsmodus</h1>
+<p>Die Website wird gerade gewartet. Bitte versuchen Sie es später erneut.</p>
+</body></html>';
+        exit;
+    }
+}
+
+// Status prüfen (vor allem anderen Code)
+checkWebsiteStatus();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head> 
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Weingut Friedel Hermann</title>
+  
+  <!-- FIXED: Korrekte Tailwind CSS Einbindung -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="output.css" />
+  
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <style>
-    .font-playfair {
-      font-family: 'Playfair Display', serif;
+
+<style>
+
+* {
+  touch-action: manipulation;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Navbar */
+.nav-hamburger.active .nav-bar:nth-child(1) {
+    transform: translateY(11px) rotate(-135deg);
+}
+.nav-hamburger.active .nav-bar:nth-child(2) {
+    opacity: 0;
+}
+.nav-hamburger.active .nav-bar:nth-child(3) {
+    transform: translateY(-11px) rotate(135deg);
+}
+
+.form-floating {
+    position: relative;
+}
+
+.form-floating input,
+.form-floating textarea {
+    width: 100%;
+    padding: 1.25rem 1rem 0.5rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #1a1a1a;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+}
+
+.form-floating input:focus,
+.form-floating textarea:focus {
+    border-color: #1a1a1a;
+}
+
+.form-floating label {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    color: #6b7280;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    transform-origin: left top;
+}
+
+.form-floating input:focus + label,
+.form-floating input:not(:placeholder-shown) + label,
+.form-floating textarea:focus + label,
+.form-floating textarea:not(:placeholder-shown) + label {
+    transform: translateY(-0.75rem) scale(0.875);
+    color: #1a1a1a;
+    font-weight: 500;
+}
+
+.form-floating input::placeholder,
+.form-floating textarea::placeholder {
+    color: transparent;
+}
+
+.submit-btn {
+    background: #1a1a1a;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.025em;
+}
+
+.submit-btn:hover {
+    color: white;
+    background: rgb(33, 31, 31);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(26, 26, 26, 0.15);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Wine Carousel Styles - UPDATED */
+.wine-carousel-container {
+    position: relative;
+    overflow: hidden;
+    /* Erweitert das Carousel nach rechts über den Container hinaus */
+    margin-left: 0;
+    margin-right: calc(-50vw + 50%);
+    padding-right: calc(50vw - 50%);
+}
+
+.wine-carousel {
+    display: flex;
+    gap: 30px;
+    transition: transform 0.5s ease;
+    padding: 20px 0;
+    /* Rechts mehr Padding für bessere Optik */
+    padding-right: 40px;
+}
+
+/* Alternative Lösung - falls die erste nicht funktioniert */
+/* 
+.wine-carousel-container {
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding-left: calc(50vw - 50%);
+}
+*/
+
+/* Alternative Lösung 2 - mit breakout */
+/*
+.wine-carousel-container {
+    position: relative;
+    overflow: hidden;
+    width: calc(100vw - (100vw - 100%) / 2);
+    margin-right: calc((100vw - 100%) / -2);
+}
+*/
+
+/* Wine Card Styles - Vereinfacht */
+.wine-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    position: relative;
+    flex: 0 0 320px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.wine-card:hover {
+    transform: translateY(-5px);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-  </style>
+}
+
+.wine-image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.wine-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 15px; /* Alle Seiten gerundet */
+    transition: transform 0.3s ease;
+}
+
+.wine-image-placeholder {
+    width: 100%;
+    height: 250px;
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px; /* Alle Seiten gerundet */
+}
+
+.wine-image-placeholder i {
+    font-size: 3rem;
+    color: #9ca3af;
+}
+
+.wine-content {
+    padding: 20px;
+    background: white;
+    border-radius: 0 0 15px 15px;
+}
+
+.wine-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.wine-region {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.wine-region i {
+    margin-right: 8px;
+    color: #667eea;
+}
+
+.wine-description {
+    color: #4b5563;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 72px;
+}
+
+.wine-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #f3f4f6;
+}
+
+.wine-price {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1f2937;
+    letter-spacing: -0.5px;
+}
+
+.wine-price .currency {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+/* Add to Cart Button - nur bei Hover über Image sichtbar */
+.add-to-cart-btn {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+}
+
+.wine-image-container:hover .add-to-cart-btn {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.add-to-cart-btn:hover {
+    background: rgba(0, 0, 0, 1);
+    transform: translateY(-2px);
+}
+
+.carousel-btn {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-btn:hover {
+    background: #f9f9f9;
+}
+
+.no-wines {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: #666;
+    min-height: 200px;
+}
+
+.no-wines i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: #ddd;
+}
+
+.no-wines h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #4b5563;
+}
+
+.no-wines p {
+    font-size: 1rem;
+}
+
+/* Warenkorb Sidebar Styles */
+.cart-sidebar {
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.cart-sidebar.open {
+    transform: translateX(0);
+}
+
+.overlay {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.quantity-btn {
+    transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+    transform: scale(1.1);
+}
+
+.cart-item {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.remove-item {
+    transition: all 0.2s ease;
+}
+
+.remove-item:hover {
+    transform: rotate(90deg);
+}
+
+.cart-badge {
+    animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 20%, 60%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    80% { transform: translateY(-5px); }
+}
+
+/* DEMO DATEN - Da keine PHP Datenbank vorhanden */
+.demo-wine-cards {
+    display: flex;
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.demo-content {
+            display: none;
+        }
+
+        .demo-content h1 {
+            color: #000000;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .demo-content p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        /* Cookie Banner Styles - Als Pop-up zentriert */
+        .cookie-banner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: #ffffff;
+            color: #000000;
+            padding: 2rem;
+            z-index: 10000;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 2px solid #000000;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cookie-banner.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cookie-banner.hide {
+            transform: translate(-50%, -50%) scale(0.8);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .cookie-content {
+            max-width: 100%;
+            margin: 0;
+            display: block;
+            text-align: center;
+        }
+
+        .cookie-text {
+            margin-bottom: 2rem;
+        }
+
+        .cookie-text h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .cookie-text p {
+            opacity: 0.8;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .cookie-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .cookie-buttons .btn-accept {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .cookie-buttons .btn-decline {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .cookie-buttons .btn-settings {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .cookie-buttons .btn-privacy {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .cookie-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .cookie-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-accept {
+            background: #000000;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-decline {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-settings {
+            background: #000000;
+            color: white;
+            border: 2px solid #000000;
+        }
+
+        .btn-privacy {
+            background: transparent;
+            color: #000000;
+            border: 1px solid #000000;
+            font-size: 0.9rem;
+        }
+
+        /* Cookie Settings Modal */
+        .cookie-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 2rem;
+        }
+
+        .cookie-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            
+            /* Scrollbar verstecken */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+        }
+
+        /* Webkit Scrollbar verstecken (Chrome, Safari, Edge) */
+        .modal-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header h3 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .cookie-category {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .category-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #000000;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .status-indicator {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        /* Pop-up Overlay */
+        .cookie-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cookie-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .legal-notice {
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.6);
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .cookie-banner {
+                width: 95%;
+                padding: 1.5rem;
+            }
+            
+            .cookie-buttons {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto auto;
+                gap: 0.8rem;
+            }
+
+            .cookie-buttons .btn-accept {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .cookie-buttons .btn-decline {
+                grid-column: 1;
+                grid-row: 2;
+            }
+
+            .cookie-buttons .btn-settings {
+                grid-column: 1;
+                grid-row: 3;
+            }
+
+            .cookie-buttons .btn-privacy {
+                grid-column: 1;
+                grid-row: 4;
+            }
+
+            .cookie-btn {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+</style>
 </head>
 
 <body class="bg-gray-50">
+<?php
 
+// Datenbankverbindung
+$servername = "sql202.infinityfree.com";
+$username = "if0_39480348";
+$password = "xMrsRstEXrohU9";
+$dbname = "if0_39480348_products";
 
-<!-- navbar -->
-<nav class="flex justify-between items-center px-8 py-4 border-b">
+// Verbindung mit Datenbankauswahl erstellen
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verbindung prüfen
+if ($conn->connect_error) {
+    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
+
+// Alle Weine ohne Limit abrufen (für das Karussell)
+$sql = "SELECT * FROM produkte ORDER BY name ASC";
+$result = $conn->query($sql);
+
+if (!$result) {
+    die("Ungültige Abfrage: " . $conn->error);
+}
+
+// Funktion zur Bestimmung des Weintyps basierend auf dem Namen
+function getWineType($name) {
+    $name = strtolower($name);
+    if (strpos($name, 'rot') !== false || strpos($name, 'spätburgunder') !== false || strpos($name, 'merlot') !== false) {
+        return ['type' => 'rotwein', 'label' => 'Rotwein'];
+    } elseif (strpos($name, 'rosé') !== false || strpos($name, 'rose') !== false) {
+        return ['type' => 'rose', 'label' => 'Rosé'];
+    } else {
+        return ['type' => 'weisswein', 'label' => 'Weißwein'];
+    }
+}
+
+// Funktion zur Bestimmung des Lagerbestand-Status
+function getStockStatus($stock) {
+    if ($stock <= 0) {
+        return ['class' => 'stock-out', 'text' => 'Ausverkauft'];
+    } elseif ($stock <= 10) {
+        return ['class' => 'stock-low', 'text' => 'Wenige verfügbar'];
+    } elseif ($stock <= 50) {
+        return ['class' => 'stock-medium', 'text' => 'Verfügbar'];
+    } else {
+        return ['class' => 'stock-high', 'text' => 'Gut verfügbar'];
+    }
+}
+?>
+<!-- Overlay -->
+<div id="cart-overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+
+<!-- Warenkorb Sidebar -->
+<div id="cart-sidebar" class="cart-sidebar fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+        <h2 class="text-xl font-bold font-playfair">Ihr Warenkorb</h2>
+        <button id="close-cart" class="text-gray-500 hover:text-gray-700 text-2xl">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Cart Items -->
+    <div id="cart-items" class="flex-1 overflow-y-auto p-6">
+        <!-- Leerer Warenkorb -->
+        <div id="empty-cart" class="text-center py-12">
+            <i class="fas fa-shopping-cart text-gray-300 text-6xl mb-4"></i>
+            <p class="text-gray-500 text-lg">Ihr Warenkorb ist leer</p>
+            <p class="text-gray-400 text-sm mt-2">Fügen Sie Produkte hinzu, um zu beginnen</p>
+        </div>
+
+        <!-- Cart Items Container -->
+        <div id="cart-items-list" class="space-y-4 hidden"></div>
+    </div>
+
+    <!-- Footer -->
+    <div id="cart-footer" class="hidden border-t border-gray-200 p-6 bg-gray-50">
+        <!-- Zwischensumme -->
+        <div class="flex justify-between items-center mb-4">
+            <span class="text-lg font-semibold">Zwischensumme:</span>
+            <span id="cart-total" class="text-xl font-bold">€0.00</span>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="space-y-3">
+            <button class="w-full bg-black hover:bg-gray-800 text-white py-3 rounded-lg font-semibold transition-colors">
+                Zur Kasse
+            </button>
+            <button id="clear-cart" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-medium transition-colors">
+                Warenkorb leeren
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="flex justify-between items-center px-8 py-4 border-b border-b-gray-300">
   <div class="text-lg font-semibold">Weingut Hermann</div>
   
   <!-- Desktop Menü -->
   <nav class="space-x-8 hidden md:flex">
     <a href="#" class="text-gray-700 hover:text-black">Home</a>
-    <a href="#" class="text-gray-700 hover:text-black">Shop</a>
+    <a href="katalog.php" class="text-gray-700 hover:text-black">Shop</a>
     <a href="#" class="text-gray-700 hover:text-black">Blog</a>
     <a href="#" class="text-gray-700 hover:text-black">Kontakt</a>
   </nav>
   
-  <button class="bg-black text-white px-4 py-2 rounded hidden md:block">Warenkorb</button>
+  <!-- Warenkorb Button mit Badge -->
+  <button id="cart-btn" class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded hidden md:flex items-center gap-2 relative">
+      <i class="fas fa-shopping-cart"></i>
+      Checkout
+      <span id="cart-badge" class="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center absolute -top-2 -right-2">0</span>
+  </button>
   
   <!-- Mobile Menü Button -->
-  <div class="md:hidden">
-    <button id="menu-btn" class="focus:outline-none" aria-label="Menü öffnen">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" 
-           xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-              d="M4 6h16M4 12h16M4 18h16"></path>
-      </svg>
-    </button>
+  <div class="md:hidden flex items-center gap-2">
+      <button id="cart-btn-mobile" class="bg-black hover:bg-gray-800 text-white px-3 py-2 rounded relative">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cart-badge-mobile" class="bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center absolute -top-1 -right-1">0</span>
+      </button>
+      <div id="menu-btn" class="nav-hamburger flex flex-col cursor-pointer w-8 h-6 justify-between transition-all duration-300 z-1000" onclick="toggleMenu()">
+        <div class="nav-bar bg-black w-8 h-0.5 transition-all duration-300 rounded-sm"></div>
+        <div class="nav-bar bg-black w-8 h-0.5 transition-all duration-300 rounded-sm"></div>
+        <div class="nav-bar bg-black w-8 h-0.5 transition-all duration-300 rounded-sm"></div>
+      </div>
   </div>
 </nav>
 
 <!-- Mobile Dropdown Menü -->
-<nav id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white border-b border-gray-200">
-  <a href="#" class="block px-8 py-4 border-t text-gray-700 hover:bg-gray-100">Home</a>
-  <a href="#" class="block px-8 py-4 border-t text-gray-700 hover:bg-gray-100">Shop</a>
-  <a href="#" class="block px-8 py-4 border-t text-gray-700 hover:bg-gray-100">Blog</a>
-  <a href="#" class="block px-8 py-4 border-t text-gray-700 hover:bg-gray-100">Kontakt</a>
-  <button class="w-full bg-black text-white px-8 py-3 rounded-b">Warenkorb</button>
+<nav id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white border-b-gray-300">
+  <a href="#" class="block px-8 py-4 border-b border-gray-200 text-gray-700 hover:bg-gray-100">Home</a>
+  <a href="#" class="block px-8 py-4 border-b border-gray-200 text-gray-700 hover:bg-gray-100">Shop</a>
+  <a href="#" class="block px-8 py-4 border-b border-gray-200 text-gray-800 hover:bg-gray-100">Blog</a>
+  <a href="#" class="block px-8 py-4 text-gray-700 hover:bg-gray-100">Kontakt</a>
 </nav>
 
-
-    <!-- hero -->
-    <section class="flex flex-col md:flex-row items-center justify-between px-8 py-16 max-w-7xl mx-auto text-center md:text-left">
-      <div class="md:w-1/2 mb-12 md:mb-0">
-        <p class="text-sm text-gray-500 mb-2">Discover the Finest Wines</p>
-        <h1 class="text-5xl font-playfair font-semibold text-gray-900 leading-snug mb-6">
-          Weingut Friedel <br /> Hermann
-        </h1>
-        <p class="text-gray-600 text-lg mb-6">Explore our exquisite collection of premium wines.</p>
-        <button class="bg-black text-white px-6 py-3 rounded font-semibold">Shop Now</button>
+<!-- HERO -->
+<section class="flex flex-col md:flex-row items-center justify-between px-8 py-16 max-w-7xl mx-auto text-center md:text-left">
+  <div class="md:w-1/2 mb-12 md:mb-0">
+    <p class="text-sm text-gray-500 mb-2">Discover the Finest Wines</p>
+    <h1 class="text-5xl font-playfair italic font-semibold text-gray-900 leading-snug mb-6">
+      Weingut Friedel <br /> Hermann
+    </h1>
+    <p class="text-gray-600 text-lg mb-6">Explore our exquisite collection of premium wines.</p>
+    <button class="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded font-semibold">Shop Now</button>
+  </div>
+  <div class="md:w-1/2 flex justify-center relative">
+      <div class="w-96 h-96 bg-gradient-to-br from-purple-600 to-blue-500 rounded-full flex items-center justify-center">
+        <i class="fas fa-wine-bottle text-white text-8xl"></i>
       </div>
-      <div class="md:w-1/2 flex justify-center relative">
-          <img src="Wein.png" alt="Wine" class="w-full h-auto object-contain max-h-[450px]" />
+  </div>
+</section>
+
+<!-- INFO -->
+<section class="bg-gray-900 text-white py-16 px-8">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center text-center md:text-left">
+    <div class="md:w-1/2 mb-8 md:mb-0">
+      <p class="text-sm mb-2">Crafted with Care</p>
+      <h2 class="text-3xl font-playfair italic font-semibold mb-4">Exceptional Flavors</h2>
+      <p class="mb-6 text-gray-300">From bold reds to crisp whites, our diverse wine offerings cater to every taste. Discover the perfect pairing for your next gather...</p>
+      <button class="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded">Explore More</button>
+    </div>
+    <div class="md:w-1/2 relative">
+      <div class="w-64 h-96 bg-gradient-to-br from-red-600 to-purple-600 rounded-2xl flex items-center justify-center">
+        <i class="fas fa-wine-glass-alt text-white text-6xl"></i>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
+
+<!-- STAR -->
+<section class="bg-white text-center py-8 pb-8 pt-16">
+  <div class="my-10 text-gray-400">---+✧✧✧+---</div>
+  <p class="text-sm text-gray-500">Nahe Wein</p>
+  <h2 class="text-4xl font-playfair italic font-semibold my-4">Nur das beste für Sie</h2>
+  <p class="text-gray-600 max-w-2xl mx-auto">Indulge in the depth and complexity of our carefully curated wines, each bottle a testament to the art of winemaking</p>
+  <div class="my-10 text-gray-400">---+✧✧✧+---</div>
+</section>
 
 
-    <!-- section 1 -->
-    <section class="bg-gray-900 text-white py-16 px-8">
-      <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center text-center md:text-left">
-        <div class="md:w-1/2 mb-8 md:mb-0">
-          <p class="text-sm mb-2">Crafted with Care</p>
-          <h2 class="text-3xl font-playfair mb-4">Exceptional Flavors</h2>
-          <p class="mb-6 text-gray-300">From bold reds to crisp whites, our diverse wine offerings cater to every taste. Discover the perfect pairing for your next gather...</p>
-          <button class="bg-white text-black px-4 py-2 rounded">Explore More</button>
-        </div>
-        <div class="md:w-1/2 relative top-[100px]">
-          <img src="Wein.png" alt="Wine Bottles" class="max-h-[400px] w-auto">
-        </div>
+<section class="bg-neutral-900 text-neutral-200 flex items-center justify-center min-h-screen">
+  <div class="flex flex-col md:flex-row max-w-5xl w-full gap-10 p-8">
+    <!-- Text Section -->
+    <div class="flex-1 flex flex-col justify-center">
+      <p class="text-sm text-neutral-400 mb-2">Timeless Elegance</p>
+      <h1 class="text-4xl font-serif font-bold text-white mb-4">
+        Unser Ganzer<br>Stolz
+      </h1>
+      <p class="text-sm text-neutral-300 mb-6">
+        Immerse yourself in the rich history and time-honored traditions of our winemaking partners.
+        From the rolling vineyards of Napa to the sun-drenched slopes of Tuscany, each bottle tells
+        a story of passion, expertise, and dedication.
+      </p>
+      <p class="text-sm text-neutral-400 mb-4">Exceptional Quality</p>
+      <button class="bg-white text-neutral-900 font-semibold px-5 py-2 rounded hover:bg-neutral-200 transition">
+        Blog
+      </button>
+    </div>
+    <!-- Placeholder Image Section -->
+    <div class="flex-1 flex items-center justify-center">
+      <div class="w-full aspect-square bg-neutral-700 rounded flex items-center justify-center text-neutral-400 text-lg">
+        Platzhalterbild
       </div>
-    </section>
+    </div>
+  </div>
+</section>
+    
 
-
-    <!-- section 2 -->
-    <section class="bg-white text-center py-8 px-8">
-      <div class="my-6 text-gray-400">---+✧✧✧+---</div>
-      <p class="text-sm text-gray-500">Nahe Wein</p>
-      <h2 class="text-3xl font-playfair my-4">Nur das Beste für Sie</h2>
-      <p class="text-gray-600 max-w-2xl mx-auto">Indulge in the depth and complexity of our carefully curated wines, each bottle a testament to the art of winemaking</p>
-      <div class="my-6 text-gray-400">---+✧✧✧+---</div>
-    </section>
-
-
-<!-- kataloge -->
+<!-- KATALOGE -->
 <section class="py-16 bg-white overflow-hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-10">
       <h2 class="text-4xl font-playfair italic font-semibold">Unsere Weine</h2>
       <p class="text-gray-600 mt-2 max-w-2xl mx-auto">Erleben Sie unsere besten Tropfen – direkt vom Weingut Friedel Hermann</p>
     </div>
-
-    <div class="flex justify-end mb-4 gap-2">
-      <button data-carousel="katalog" data-dir="-1" class="carousel-btn bg-white p-2 rounded-full shadow hover:bg-gray-100">&larr;</button>
-      <button data-carousel="katalog" data-dir="1" class="carousel-btn bg-white p-2 rounded-full shadow hover:bg-gray-100">&rarr;</button>
+    <div class="flex justify-end items-center mb-6 gap-3">
+      <button 
+        onclick="moveCarousel(-1)" 
+        class="bg-white p-2 rounded-full hover:bg-gray-100 border border-gray-200 transition-all duration-200 w-10 h-10 flex items-center justify-center"
+      >
+        &larr;
+      </button>
+      <button 
+        onclick="moveCarousel(1)" 
+        class="bg-white p-2 rounded-full hover:bg-gray-100 border border-gray-200 transition-all duration-200 w-10 h-10 flex items-center justify-center"
+      >
+        &rarr;
+      </button>
+      <button 
+        class="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 ml-2"
+      >
+       <a href="katalog.php">Shop Now</a>
+      </button>
     </div>
 
-    <div class="relative">
-      <div id="carousel-katalog" class="carousel flex overflow-x-auto gap-6 scroll-smooth snap-x snap-mandatory no-scrollbar touch-pan-x">
-        <!-- JavaScript cards -->
+    <div class="wine-carousel-container relative">
+      <div id="wine-carousel" class="wine-carousel">
+     <?php if ($result && $result->num_rows > 0): ?>
+    <?php $cardIndex = 0; ?>
+    <?php while($wine = $result->fetch_assoc()): ?>
+        <?php
+        $cardIndex++;
+        ?>
+        <div class="wine-card" style="animation-delay: <?php echo $cardIndex * 0.1; ?>s;">
+            <div class="wine-image-container">
+                <a href="details.php?id=<?php echo $wine['id']; ?>" style="text-decoration: none; color: inherit;">
+                    <?php if (!empty($wine['bild']) && file_exists($wine['bild'])): ?>
+                        <img src="<?php echo htmlspecialchars($wine['bild']); ?>" alt="<?php echo htmlspecialchars($wine['name']); ?>" class="wine-image">
+                    <?php else: ?>
+                        <div class="wine-image-placeholder">
+                            <i class="fas fa-wine-bottle"></i>
+                        </div>
+                    <?php endif; ?>
+                </a>
+                
+                <!-- Add to Cart Button - nur bei Hover sichtbar -->
+                <button
+                    class="add-to-cart-btn add-to-cart"
+                    data-id="<?php echo $wine['id']; ?>"
+                    data-name="<?php echo htmlspecialchars($wine['name']); ?>"
+                    data-price="<?php echo $wine['preis']; ?>"
+                    data-image="<?php echo !empty($wine['bild']) && file_exists($wine['bild']) ? htmlspecialchars($wine['bild']) : 'https://via.placeholder.com/80x80/f0f0f0/999999?text=W'; ?>"
+                    onclick="event.preventDefault(); event.stopPropagation();"
+                >
+                    <i class="fas fa-plus"></i>
+                    Hinzufügen
+                </button>
+            </div>
+            
+            <div class="wine-content">
+                <h3 class="wine-title"><?php echo htmlspecialchars($wine['name']); ?></h3>
+                <div class="wine-price">
+                    <?php echo number_format($wine['preis'], 2); ?> <span class="currency">€</span>
+                </div>
+            </div>
+        </div>
+    <?php endwhile; ?>
+<?php else: ?>
+    <div class="no-wines">
+        <i class="fas fa-wine-bottle"></i>
+        <h3>Keine Weine verfügbar</h3>
+        <p>Momentan sind keine Weine in unserem Sortiment.</p>
+    </div>
+<?php endif; ?>
+
+        
       </div>
     </div>
   </div>
+</section>
 
-
-    <!-- section 3 -->
-    <section class="bg-gray-900 text-white py-16 pl-8">
-      <div class="flex flex-col md:flex-row items-center gap-12">
-        <div class="md:w-1/2 mx-8 md:mb-0 text-center md:text-left">
-          <p class="text-sm mb-2">Crafted with Care</p>
-          <h2 class="text-3xl font-playfair mb-4">Exceptional Flavors</h2>
-          <p class="mb-6 text-gray-300">From bold reds to crisp whites, our diverse wine offerings cater to every taste. Discover the perfect pairing for your next gather...</p>
-          <button class="bg-white text-black px-4 py-2 rounded">Explore More</button>
-        </div>
-        <div class="md:w-1/2 flex justify-end">
-          <img src="Wein.png" alt="Wine Bottles" class="max-h-[400px] w-auto">
-        </div>
+<!-- INFO -->
+<section class="bg-gray-900 text-white py-16 pl-8">
+  <div class="flex flex-col md:flex-row items-center gap-12">
+    <div class="md:w-1/2 mx-8 md:mb-0 text-center md:text-left xl:ml-80">
+      <p class="text-sm mb-2">Crafted with Care</p>
+      <h2 class="text-3xl font-playfair italic font-semibold mb-4">Exceptional Flavors</h2>
+      <p class="mb-6 text-gray-300">From bold reds to crisp whites, our diverse wine offerings cater to every taste. Discover the perfect pairing for your next gather...</p>
+      <button class="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded">Explore More</button>
+    </div>
+    <div class="md:w-1/2 flex justify-end">
+      <div class="w-64 h-96 bg-gradient-to-br from-amber-600 to-red-600 rounded-2xl flex items-center justify-center xl:mr-80">
+        <i class="fas fa-wine-glass text-white text-6xl"></i>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    
-    <!-- bestseller -->
+<!-- BESTSELLER -->
 <section class="bg-gray-100 py-20 px-4">
   <div class="max-w-screen-2xl mx-auto text-center mb-12 px-4">
-    <h2 class="text-4xl md:text-6xl font-playfair mb-2">Unsere Bestseller</h2>
+    <h2 class="text-4xl md:text-5xl font-playfair italic font-semibold mb-4">Unsere Bestseller</h2>
     <p class="text-gray-600 text-sm md:text-lg">Das beste aus unserem Wein und deshalb auch das bester für sie</p>
   </div>
 
@@ -164,16 +1116,20 @@
     <!-- Produktkarte 1 -->
     <div class="relative max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 md:gap-4">
       <!-- Bild -->
-      <div class="bg-black rounded-3xl pt-2 px-4 shadow-[inset_0_-40px_10px_rgba(255,255,255,0.4)] md:w-[40%] w-full max-w-[500px]">
-        <img src="wine.svg" alt="Wein" class="w-full max-w-[380px] h-auto mx-auto" />
+      <div class="bg-black rounded-2xl pt-2 px-4 shadow-2xl md:w-[70%] w-full max-w-[500px]">
+        <div class="w-full max-w-[380px] h-64 mx-auto bg-gradient-to-br from-red-500 to-purple-600 rounded-lg flex items-center justify-center">
+          <i class="fas fa-wine-bottle text-white text-6xl"></i>
+        </div>
       </div>
       <!-- Textkarte -->
-      <div class="bg-transparent md:bg-white md:bg-opacity-70 md:backdrop-blur-sm p-4 md:p-8 rounded-3xl md:shadow-xl text-center md:text-left md:-ml-12 mt-4 md:mt-0 w-full max-w-[320px]">
-        <h3 class="text-lg md:text-xl font-playfair font-semibold mb-2">2020 Guldentaler Sonnenberg – Dornfelder trocken</h3>
-        <p class="text-gray-700 mb-4 text-sm md:text-base">Lorem ipsum dolor sit amet, consectetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>
-        <div class="flex justify-center md:justify-start gap-3">
-          <button class="bg-black text-white px-4 py-2 rounded">Add to Cart</button>
-          <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded">More Details</button>
+      <div class="bg-transparent md:bg-white/40 md:backdrop-blur-sm p-8 md:px-16 md rounded-xl md:shadow-xl text-center md:text-left md:-ml-20 mt-4 md:mt-0 w-full max-w-[400px]">
+        <h3 class="text-2xl font-playfair font-semibold mb-2">2020 Guldentaler Sonnenberg – Dornfelder trocken</h3>
+        <p class="text-gray-700 mb-4 text-lg">Lorem ipsum dolor sit amet, consectetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>
+        <div class="flex justify-center">
+          <div class="flex md:justify-start gap-4">
+            <button class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded">Add to Cart</button>
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">More Details</button>
+          </div>
         </div>
       </div>
     </div>
@@ -181,16 +1137,20 @@
     <!-- Produktkarte 2 (umgedreht) -->
     <div class="relative max-w-screen-2xl mx-auto flex flex-col md:flex-row-reverse items-center justify-center gap-6 md:gap-4">
       <!-- Bild -->
-      <div class="bg-black rounded-3xl pt-2 px-4 shadow-[inset_0_-40px_10px_rgba(255,255,255,0.4)] md:w-[40%] w-full max-w-[500px]">
-        <img src="wine.svg" alt="Wein" class="w-full max-w-[380px] h-auto mx-auto" />
+      <div class="bg-black rounded-2xl pt-2 px-4 shadow-2xl md:w-[70%] w-full max-w-[500px]">
+        <div class="w-full max-w-[380px] h-64 mx-auto bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
+          <i class="fas fa-wine-bottle text-white text-6xl"></i>
+        </div>
       </div>
       <!-- Textkarte -->
-      <div class="bg-transparent md:bg-white md:bg-opacity-70 md:backdrop-blur-sm p-4 md:p-8 rounded-3xl md:shadow-xl text-center md:text-left md:-mr-12 mt-4 md:mt-0 w-full max-w-[320px]">
-        <h3 class="text-lg md:text-xl font-playfair font-semibold mb-2">2022 Spitzenprodukt – Kultwein Edition</h3>
-        <p class="text-gray-700 mb-4 text-sm md:text-base">Lorem ipsum dolor sit amet, consectetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>
-        <div class="flex justify-center md:justify-start gap-3">
-          <button class="bg-black text-white px-4 py-2 rounded">Add to Cart</button>
-          <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded">More Details</button>
+      <div class="bg-transparent md:bg-white/40 md:backdrop-blur-sm p-8 md:px-16 rounded-xl md:shadow-xl text-center md:text-left md:-mr-20 mt-4 md:mt-0 w-full max-w-[400px]">
+        <h3 class="text-2xl font-playfair font-semibold mb-2">2022 Spitzenprodukt – Kultwein Edition</h3>
+        <p class="text-gray-700 mb-4 text-lg">Lorem ipsum dolor sit amet, consectetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>
+        <div class="flex justify-center">
+          <div class="flex md:justify-start gap-4">
+            <button class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded">Add to Cart</button>
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">More Details</button>
+          </div>
         </div>
       </div>
     </div>
@@ -198,16 +1158,20 @@
     <!-- Produktkarte 3 -->
     <div class="relative max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 md:gap-4">
       <!-- Bild -->
-      <div class="bg-black rounded-3xl pt-2 px-4 shadow-[inset_0_-40px_10px_rgba(255,255,255,0.4)] md:w-[40%] w-full max-w-[500px]">
-        <img src="wine.svg" alt="Wein" class="w-full max-w-[380px] h-auto mx-auto" />
+      <div class="bg-black rounded-2xl pt-2 px-4 shadow-2xl md:w-[70%] w-full max-w-[500px]">
+        <div class="w-full max-w-[380px] h-64 mx-auto bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
+          <i class="fas fa-wine-bottle text-white text-6xl"></i>
+        </div>
       </div>
       <!-- Textkarte -->
-      <div class="bg-transparent md:bg-white md:bg-opacity-70 md:backdrop-blur-sm p-4 md:p-8 rounded-3xl md:shadow-xl text-center md:text-left md:-ml-12 mt-4 md:mt-0 w-full max-w-[320px]">
-        <h3 class="text-lg md:text-xl font-playfair font-semibold mb-2">1995 Guldentaler Sonnenwein – Edel</h3>
-        <p class="text-gray-700 mb-4 text-sm md:text-base">Lorem ipsum dolor sit amet, consectetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>
-        <div class="flex justify-center md:justify-start gap-3">
-          <button class="bg-black text-white px-4 py-2 rounded">Add to Cart</button>
-          <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded">More Details</button>
+      <div class="bg-transparent md:bg-white/40 md:backdrop-blur-sm p-8 md:px-16 rounded-xl md:shadow-xl text-center md:text-left md:-ml-20 mt-4 md:mt-0 w-full max-w-[400px]">
+        <h3 class="text-2xl font-playfair font-semibold mb-2">1995 Guldentaler Sonnenwein – Edel</h3>
+        <p class="text-gray-700 mb-4 text-lg">Lorem ipsum dolor sit amet, consectetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>
+        <div class="flex justify-center">
+          <div class="flex md:justify-start gap-4">
+            <button class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded">Add to Cart</button>
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded">More Details</button>
+          </div>
         </div>
       </div>
     </div>
@@ -215,25 +1179,74 @@
   </div>
 </section>
 
+<!-- KUNDEN -->
+<section class="bg-white py-16">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12">Kundenbewertungen</h2>
 
+    <div id="review-section" class="relative overflow-hidden" style="mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
+      <div id="review-track" class="flex gap-6 whitespace-nowrap will-change-transform transition-transform duration-500 ease-linear">
 
+        <!-- Bewertungskarte 1 -->
+        <div class="bg-gray-50 border rounded-xl shadow-sm p-4 w-64 shrink-0">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 mb-3 flex items-center justify-center">
+            <i class="fas fa-user text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-1">Julia Meier</h3>
+          <p class="text-sm text-wrap text-gray-600 mb-2">„Der beste Wein, den ich je probiert habe!"</p>
+          <div class="text-yellow-500 text-sm">★★★★★</div>
+        </div>
 
-    <!-- Kunden -->
-<section class="py-16 bg-white overflow-hidden">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-10">
-      <h2 class="text-4xl font-playfair italic font-semibold">Was unsere Kunden sagen</h2>
-      <p class="text-gray-600 mt-2 max-w-2xl mx-auto">Erfahren Sie, warum Weinliebhaber weltweit begeistert sind</p>
-    </div>
+        <!-- Bewertungskarte 2 -->
+        <div class="bg-gray-50 border rounded-xl shadow-sm p-4 w-64 shrink-0">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-cyan-500 mb-3 flex items-center justify-center">
+            <i class="fas fa-user text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-1">Tom Schneider</h3>
+          <p class="text-sm text-wrap text-gray-600 mb-2">„Sehr schneller Versand und tolle Qualität!"</p>
+          <div class="text-yellow-500 text-sm">★★★★☆</div>
+        </div>
 
-    <div class="flex justify-end mb-4 gap-2">
-      <button data-carousel="review" data-dir="-1" class="carousel-btn bg-white p-2 rounded-full shadow hover:bg-gray-100">&larr;</button>
-      <button data-carousel="review" data-dir="1" class="carousel-btn bg-white p-2 rounded-full shadow hover:bg-gray-100">&rarr;</button>
-    </div>
+        <!-- Bewertungskarte 3 -->
+        <div class="bg-gray-50 border rounded-xl shadow-sm p-4 w-64 shrink-0">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-teal-500 mb-3 flex items-center justify-center">
+            <i class="fas fa-user text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-1">Samira K.</h3>
+          <p class="text-sm text-wrap text-gray-600 mb-2">„Bin begeistert – meine neue Lieblingsseite."</p>
+          <div class="text-yellow-500 text-sm">★★★★★</div>
+        </div>
 
-    <div class="relative">
-      <div id="carousel-review" class="carousel flex overflow-x-auto gap-6 scroll-smooth snap-x snap-mandatory no-scrollbar touch-pan-x">
-        <!-- JavaScript cards -->
+        <!-- Bewertungskarte 4 -->
+        <div class="bg-gray-50 border rounded-xl shadow-sm p-4 w-64 shrink-0">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-400 to-pink-500 mb-3 flex items-center justify-center">
+            <i class="fas fa-user text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-1">Max Mueller</h3>
+          <p class="text-sm text-wrap text-gray-600 mb-2">„Hervorragende Beratung und perfekte Weine!"</p>
+          <div class="text-yellow-500 text-sm">★★★★★</div>
+        </div>
+
+        <!-- Bewertungskarte 5 -->
+        <div class="bg-gray-50 border rounded-xl shadow-sm p-4 w-64 shrink-0">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 mb-3 flex items-center justify-center">
+            <i class="fas fa-user text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-1">Anna Weber</h3>
+          <p class="text-sm text-wrap text-gray-600 mb-2">„Immer wieder gerne! Tolle Auswahl und Service."</p>
+          <div class="text-yellow-500 text-sm">★★★★★</div>
+        </div>
+
+        <!-- Bewertungskarte 6 -->
+        <div class="bg-gray-50 border rounded-xl shadow-sm p-4 w-64 shrink-0">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 mb-3 flex items-center justify-center">
+            <i class="fas fa-user text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-1">Klaus Fischer</h3>
+          <p class="text-sm text-wrap text-gray-600 mb-2">„Premium Qualität zu fairen Preisen!"</p>
+          <div class="text-yellow-500 text-sm">★★★★☆</div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -242,223 +1255,678 @@
 
 
 
-    <!-- anmelden -->
-<section class="bg-[#1f1f1f] py-24 px-4">
-  <div class="bg-white rounded-3xl max-w-3xl mx-auto text-center px-6 py-12 shadow-md">
-    <h2 class="text-2xl md:text-3xl font-playfair font-semibold mb-6">
-      <span class="italic">Ein sehr <strong class="not-italic">Guter</strong> Wein aus der <strong class="not-italic">Nahe</strong></span>
-    </h2>
 
-    <p class="text-gray-700 text-base md:text-lg mb-8 max-w-xl mx-auto">
-      “Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-      eirmod tempor invidunt ut labore et dolore magna.”
-    </p>
 
-    <form method="POST" action="/newsletter" class="flex flex-col items-center gap-4 w-full">
-      <div class="text-left w-full max-w-md mx-auto">
-        <label for="email" class="block text-sm font-medium text-gray-800 mb-1">Ihr E-mail-Adresse</label>
-        <div class="flex flex-col md:flex-row items-center gap-4">
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            placeholder="Ihre E-Mail..."
-            class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-black outline-none transition-all w-full md:w-auto"
-          />
-          <button
-            type="submit"
-            class="bg-black text-white w-full md:w-auto font-semibold px-6 py-2 rounded-md hover:bg-gray-800 transition-all"
-          >
+<!-- NEWSLETTER -->
+<section class="bg-gray-100 py-16 px-4">
+  <div class="max-w-3xl mx-auto p-12 rounded-2xl shadow-2xl bg-white text-center" id="register">
+    <h2 class="text-3xl font-bold mb-4">Verpasse keine Neuigkeiten!</h2>
+    <p class="text-gray-600 mb-8">Abonniere unseren Newsletter und erfahre als Erstes von neuen Produkten, Angeboten und exklusiven Tipps.</p>
+
+    <form class="flex flex-col md:flex-row gap-5" method="POST">
+        <div class="form-floating w-full md:w-2/3">
+           <input type="email" id="login-email" name="email" placeholder="ihre.email@beispiel.de" required>
+           <label for="login-email">E-Mail Adresse</label>
+        </div>
+        
+        <button type="submit" name="register"  class="w-full md:w-1/3 submit-btn mb-4">
             Anmelden
-          </button>
-        </div>
-      </div>
+        </button>
     </form>
 
-    <p class="text-sm text-gray-500 mt-6">Wir respektieren Ihre Privatsphäre. Manche nicht ;)</p>
+    <p class="text-sm mx-20 text-gray-500 mt-4">Du kannst dich jederzeit wieder abmelden. Kein Spam, versprochen!</p>
   </div>
 </section>
 
 
-  <footer class="bg-white py-12 px-6 text-center text-xl md:text-lg md:text-left">
-    <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 border-t pt-12 border-gray-200">
 
-      <div class="flex flex-col space-y-4 items-center md:items-start">
-        <h2 class="text-4xl font-playfair italic">YOURLOGO</h2>
-        <p class="uppercase font-bold tracking-widest text-xl md:text-lg">Company</p>
-        <p class="text-gray-600 text-lg md:text-sm">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
-        <div class="w-24 border-t-2 border-gray-600 mt-4 mb-4"></div>
-        <div class="flex gap-4">
-          <a href="#" class="h-10 w-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a href="#" class="h-10 w-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="#" class="h-10 w-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition">
-            <i class="fab fa-weixin"></i>
-          </a>
-          <a href="#" class="h-10 w-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition">
-            <i class="fab fa-youtube"></i>
-          </a>
-        </div>
+
+
+
+<!-- FOOTER -->
+<footer class="bg-white py-12 px-6 text-center text-xl md:text-lg md:text-left">
+  <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 border-t pt-12 border-gray-200">
+
+    <div class="flex flex-col space-y-4 items-center md:items-start">
+      <h2 class="text-4xl font-playfair italic">WEINGUT</h2>
+      <p class="uppercase font-bold tracking-widest text-xl md:text-lg">Hermann</p>
+      <p class="text-gray-600 text-center md:text-left text-lg md:text-sm">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
+      <div class="w-24 border-t-2 border-gray-600 mt-4 mb-4"></div>
+      <div class="flex gap-4">
+        <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
+          <i class="fab fa-facebook-f text-gray-700 hover:text-black"></i>
+        </a>
+        <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
+          <i class="fab fa-instagram text-gray-700 hover:text-black"></i>
+        </a>
+        <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
+          <i class="fab fa-twitter text-gray-700 hover:text-black"></i>
+        </a>
+        <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
+          <i class="fab fa-youtube text-gray-700 hover:text-black"></i>
+        </a>
       </div>
+      <a href="#"><p class="text-gray-500 hover:text-black">Anmelden/Registrieren</p></a>
+    </div>
 
-      <div class="space-y-4 border-t md:border-t-0 md:border-l border-gray-300 pl-6 pt-6 max-w-[500px] w-full mx-auto">
-        <h3 class="text-2xl md:text-xl font-bold">Quick Link’s</h3>
-        <ul class="space-y-2">
-          <li><a href="#" class="hover:text-gray-700">Home</a></li>
-          <li><a href="#" class="hover:text-gray-700">About Us</a></li>
-          <li><a href="#" class="hover:text-gray-700">Our Services</a></li>
-          <li><a href="#" class="hover:text-gray-700">How It Works</a></li>
-          <li><a href="#" class="hover:text-gray-700">Why choose us</a></li>
-          <li><a href="#" class="hover:text-gray-700">Testimonials</a></li>
-        </ul>
-      </div>
+    <div class="space-y-4 border-t md:border-t-0 md:border-l border-gray-300 pl-6 pt-6 max-w-[500px] w-full mx-auto">
+      <h3 class="text-2xl md:text-xl font-bold">Quick Links</h3>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:text-gray-700">Home</a></li>
+        <li><a href="#" class="hover:text-gray-700">About Us</a></li>
+        <li><a href="#" class="hover:text-gray-700">Our Services</a></li>
+        <li><a href="#" class="hover:text-gray-700">Datenschutz</a></li>
+        <li><a href="#" class="hover:text-gray-700">Impressum</a></li>
+        <li><a href="#" class="hover:text-gray-700">Testimonials</a></li>
+      </ul>
+    </div>
 
-      <div class="flex flex-col space-y-6 border-t md:border-t-0 md:border-l border-gray-300 pl-6 pt-6 items-center md:items-start text-left max-w-[500px] w-full mx-auto">
-        <h3 class="text-2xl md:text-xl font-bold">Contact Us</h3>
-      <div>
-        <div class="flex items-start gap-4">
-          <div class="w-10 h-10 flex justify-center items-center border rounded-full">
-            <i class="fas fa-phone"></i>
+    <div class="flex flex-col space-y-6 border-t md:border-t-0 md:border-l border-gray-300 pl-6 pt-6 items-center md:items-start text-left max-w-[500px] w-full mx-auto">
+      <h3 class="text-2xl md:text-xl font-bold">Contact Us</h3>
+      <div class="space-y-4">
+        <div class="flex items-start hover:cursor-pointer gap-4">
+          <div class="w-10 h-10 flex justify-center items-center border border-gray-600 hover:border-black rounded-full">
+            <i class="fas fa-phone text-gray-700 hover:text-black"></i>
           </div>
           <div>
-            <p class="font-bold">Home</p>
-            <p class="text-gray-600 text-lg md:text-sm">1267298759742</p>
+            <p class="font-bold">Telefon</p>
+            <p class="text-gray-600 text-lg md:text-sm">+49 1234 567890</p>
           </div>
         </div>
-        <div class="flex items-start gap-4">
-          <div class="w-10 h-10 flex justify-center items-center border rounded-full">
-            <i class="fas fa-envelope"></i>
+        <div class="flex items-start hover:cursor-pointer gap-4">
+          <div class="w-10 h-10 flex justify-center items-center border border-gray-600 hover:border-black rounded-full">
+            <i class="fas fa-envelope text-gray-700 hover:text-black"></i>
           </div>
           <div>
-            <p class="font-bold">Email Us</p>
-            <p class="text-gray-600 text-lg md:text-sm">Joel@gmail.com</p>
+            <p class="font-bold">Email</p>
+            <p class="text-gray-600 text-lg md:text-sm">info@weingut-hermann.de</p>
           </div>
         </div>
-        <div class="flex items-start gap-4">
-          <div class="w-10 h-10 flex justify-center items-center border rounded-full">
-            <i class="fas fa-location-dot"></i>
+        <div class="flex items-start hover:cursor-pointer gap-4">
+          <div class="w-10 h-10 flex justify-center items-center border border-gray-600 hover:border-black rounded-full">
+            <i class="fas fa-location-dot text-gray-700 hover:text-black"></i>
           </div>
           <div>
-            <p class="font-bold">Loloacation</p>
-            <p class="text-gray-600 text-lg md:text-sm">Guldental</p>
+            <p class="font-bold">Location</p>
+            <p class="text-gray-600 text-lg md:text-sm">Guldental, Deutschland</p>
           </div>
         </div>
-      </div>
       </div>
     </div>
-  </footer>
+  </div>
+  <div class="max-w-7xl  mx-auto grid border-t border-gray-300 text-center text-sm text-gray-500 py-4 mt-12">
+    <p>&copy; <span id="year"></span> Weingut Hermann. Alle Rechte vorbehalten.</p>
+  </div>
+</footer>
 
+   
 
-<script>
-// NAV
-  const btn = document.getElementById('menu-btn');
-  const menu = document.getElementById('mobile-menu');
+    <!-- Pop-up Overlay -->
+    <div class="cookie-overlay" id="cookieOverlay"></div>
 
-  btn.addEventListener('click', () => {
-    // Toggle max-height to animate open/close smoothly
-    if (menu.style.maxHeight && menu.style.maxHeight !== "0px") {
-      menu.style.maxHeight = "0";
-    } else {
-      menu.style.maxHeight = menu.scrollHeight + "px";
-    }
-  });
-
-  // Optional: Beim Resize das Menü schließen, falls größer als md
-  window.addEventListener('resize', () => {
-    if(window.innerWidth >= 768) {
-      menu.style.maxHeight = "0";
-    }
-  });
-
-
-  // === DATEN ===
-  const katalogProdukte = [
-    { name: "Riesling Spätlese", beschreibung: "Frisch und fruchtig", bild: "wein1.jpg" },
-    { name: "Grauburgunder", beschreibung: "Trocken & sanft", bild: "wein2.jpg" },
-    { name: "Dornfelder Rotwein", beschreibung: "Kräftig und würzig", bild: "wein3.jpg" },
-    { name: "Riesling Spätlese", beschreibung: "Frisch und fruchtig", bild: "wein1.jpg" },
-    { name: "Grauburgunder", beschreibung: "Trocken & sanft", bild: "wein2.jpg" },
-    { name: "Dornfelder Rotwein", beschreibung: "Kräftig und würzig", bild: "wein3.jpg" },
-    { name: "Riesling Spätlese", beschreibung: "Frisch und fruchtig", bild: "wein1.jpg" },
-    { name: "Grauburgunder", beschreibung: "Trocken & sanft", bild: "wein2.jpg" },
-    { name: "Dornfelder Rotwein", beschreibung: "Kräftig und würzig", bild: "wein3.jpg" },
-  ];
-
-  const kundenMeinungen = [
-    { text: "Einfach der beste Wein, den ich je probiert habe!", name: "Joel Friedrich", rolle: "Wein Genießer", bild: "avatar1.jpg" },
-    { text: "Fantastischer Geschmack und tolle Beratung!", name: "Serhat Frank", rolle: "Wein Liebhaber", bild: "avatar2.jpg" },
-    { text: "Jedes Jahr aufs Neue begeistert!", name: "Florian", rolle: "Wein Verkoster", bild: "avatar3.jpg" },
-    { text: "Einfach der beste Wein, den ich je probiert habe!", name: "Joel Friedrich", rolle: "Wein Genießer", bild: "avatar1.jpg" },
-    { text: "Fantastischer Geschmack und tolle Beratung!", name: "Serhat Frank", rolle: "Wein Liebhaber", bild: "avatar2.jpg" },
-    { text: "Jedes Jahr aufs Neue begeistert!", name: "Florian", rolle: "Wein Verkoster", bild: "avatar3.jpg" },
-    { text: "Einfach der beste Wein, den ich je probiert habe!", name: "Joel Friedrich", rolle: "Wein Genießer", bild: "avatar1.jpg" },
-    { text: "Fantastischer Geschmack und tolle Beratung!", name: "Serhat Frank", rolle: "Wein Liebhaber", bild: "avatar2.jpg" },
-    { text: "Jedes Jahr aufs Neue begeistert!", name: "Florian", rolle: "Wein Verkoster", bild: "avatar3.jpg" },
-  ];
-
-  // === RENDERING ===
-  function renderCards(containerId, daten, type) {
-    const container = document.getElementById(containerId);
-    daten.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "w-[300px] md:w-[350px] bg-gray-50 rounded-2xl p-6 flex-shrink-0 snap-start shadow";
-      if (type === "katalog") {
-        card.innerHTML = `
-          <img src="${item.bild}" alt="${item.name}" class="w-full h-48 object-cover rounded-xl mb-4">
-          <h3 class="text-xl font-bold mb-2">${item.name}</h3>
-          <p class="text-gray-600 text-sm">${item.beschreibung}</p>
-        `;
-      } else {
-        card.innerHTML = `
-          <p class="text-xl text-gray-800 mb-4">&ldquo;${item.text}&rdquo;</p>
-          <div class="flex items-center gap-4">
-            <img src="${item.bild}" alt="${item.name}" class="w-10 h-10 rounded-full" />
-            <div>
-              <p class="font-bold">${item.name}</p>
-              <p class="text-sm text-gray-500">${item.rolle}</p>
+    <!-- Cookie Banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <h3>🍪 Wir verwenden Cookies</h3>
+                <p>Diese Website verwendet Cookies, um Ihnen die bestmögliche Nutzererfahrung zu bieten. Durch die weitere Nutzung stimmen Sie der Verwendung von Cookies zu.</p>
+                <div class="legal-notice">
+                    Gemäß DSGVO und ePrivacy-Verordnung. Weitere Informationen in unserer Datenschutzerklärung.
+                </div>
             </div>
-          </div>
-        `;
-      }
-      container.appendChild(card);
+            <div class="cookie-buttons">
+                <button class="cookie-btn btn-accept" onclick="acceptCookies()">Alle akzeptieren</button>
+                <button class="cookie-btn btn-decline" onclick="declineCookies()">Ablehnen</button>
+                <button class="cookie-btn btn-settings" onclick="openCookieSettings()">Einstellungen</button>
+                <a href="datenschutz.html" class="cookie-btn btn-privacy" target="_blank">Datenschutz</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Settings Modal -->
+    <div class="cookie-modal" id="cookieModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cookie-Einstellungen</h3>
+                <button class="close-btn" onclick="closeCookieSettings()">×</button>
+            </div>
+            
+            <div class="cookie-category">
+                <div class="category-header">
+                    <span class="category-title">✅ Notwendige Cookies</span>
+                    <div class="toggle-switch active">
+                    </div>
+                </div>
+                <div class="category-description">
+                    Diese Cookies sind für das Funktionieren der Website erforderlich und können nicht deaktiviert werden. Sie werden normalerweise nur als Reaktion auf Ihre Aktionen gesetzt.
+                </div>
+            </div>
+
+            <div class="cookie-category">
+                <div class="category-header">
+                    <span class="category-title">📊 Analytische Cookies</span>
+                    <div class="toggle-switch" id="analytics-toggle" onclick="toggleCookie('analytics')">
+                    </div>
+                </div>
+                <div class="category-description">
+                    Diese Cookies helfen uns zu verstehen, wie Besucher mit der Website interagieren, indem sie Informationen anonym sammeln und melden.
+                </div>
+            </div>
+
+            <div class="cookie-category">
+                <div class="category-header">
+                    <span class="category-title">🎯 Marketing Cookies</span>
+                    <div class="toggle-switch" id="marketing-toggle" onclick="toggleCookie('marketing')">
+                    </div>
+                </div>
+                <div class="category-description">
+                    Diese Cookies werden verwendet, um Ihnen relevante Werbung basierend auf Ihren Interessen zu zeigen.
+                </div>
+            </div>
+
+            <div class="cookie-category">
+                <div class="category-header">
+                    <span class="category-title">🎨 Funktionale Cookies</span>
+                    <div class="toggle-switch" id="functional-toggle" onclick="toggleCookie('functional')">
+                    </div>
+                </div>
+                <div class="category-description">
+                    Diese Cookies ermöglichen erweiterte Funktionen und Personalisierung wie Videos und Live-Chat.
+                </div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="cookie-btn btn-decline" onclick="declineCookies()">Alle ablehnen</button>
+                <button class="cookie-btn btn-accept" onclick="saveCustomSettings()">Auswahl speichern</button>
+                <button class="cookie-btn btn-accept" onclick="acceptCookies()">Alle akzeptieren</button>
+            </div>
+        </div>
+    </div>
+<script>
+// NAV & WARENKORB SYSTEM
+// Warenkorb State
+let cart = [];
+
+// DOM Elemente
+const cartBtn = document.getElementById('cart-btn');
+const cartBtnMobile = document.getElementById('cart-btn-mobile');
+const cartSidebar = document.getElementById('cart-sidebar');
+const cartOverlay = document.getElementById('cart-overlay');
+const closeCartBtn = document.getElementById('close-cart');
+const cartBadge = document.getElementById('cart-badge');
+const cartBadgeMobile = document.getElementById('cart-badge-mobile');
+const cartItemsList = document.getElementById('cart-items-list');
+const emptyCart = document.getElementById('empty-cart');
+const cartFooter = document.getElementById('cart-footer');
+const cartTotal = document.getElementById('cart-total');
+const clearCartBtn = document.getElementById('clear-cart');
+
+// Event Listeners für Warenkorb
+cartBtn.addEventListener('click', openCart);
+cartBtnMobile.addEventListener('click', openCart);
+closeCartBtn.addEventListener('click', closeCart);
+cartOverlay.addEventListener('click', closeCart);
+clearCartBtn.addEventListener('click', clearCart);
+
+// Produkte hinzufügen Event Listeners
+document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const product = {
+            id: this.dataset.id,
+            name: this.dataset.name,
+            price: parseFloat(this.dataset.price),
+            image: this.dataset.image,
+            quantity: 1
+        };
+        addToCart(product);
     });
+});
+
+// Warenkorb Funktionen
+function openCart() {
+    cartSidebar.classList.add('open');
+    cartOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+    cartSidebar.classList.remove('open');
+    cartOverlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function addToCart(product) {
+    const existingItem = cart.find(item => item.id === product.id);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({...product});
+    }
+    
+    updateCart();
+    animateBadge();
+    showNotification(`${product.name} wurde hinzugefügt!`);
+}
+
+function updateQuantity(id, newQuantity) {
+    if (newQuantity <= 0) {
+        removeFromCart(id);
+        return;
+    }
+    
+    const item = cart.find(item => item.id === id);
+    if (item) {
+        item.quantity = newQuantity;
+        updateCart();
+    }
+}
+
+function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+}
+
+function clearCart() {
+    cart = [];
+    updateCart();
+    showNotification('Warenkorb wurde geleert');
+}
+
+function updateCart() {
+    const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    // Badge aktualisieren
+    cartBadge.textContent = itemCount;
+    cartBadgeMobile.textContent = itemCount;
+
+    // Total aktualisieren
+    cartTotal.textContent = `€${total.toFixed(2)}`;
+
+    // Cart Items anzeigen/verstecken
+    if (cart.length === 0) {
+        emptyCart.classList.remove('hidden');
+        cartItemsList.classList.add('hidden');
+        cartFooter.classList.add('hidden');
+    } else {
+        emptyCart.classList.add('hidden');
+        cartItemsList.classList.remove('hidden');
+        cartFooter.classList.remove('hidden');
+        renderCartItems();
+    }
+}
+
+function renderCartItems() {
+    cartItemsList.innerHTML = cart.map(item => `
+        <div class="cart-item flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+            
+            <div class="flex-1">
+                <h4 class="font-semibold text-sm mb-1">${item.name}</h4>
+                <p class="text-gray-600 text-sm">€${item.price.toFixed(2)}</p>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button 
+                    class="quantity-btn w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center text-sm"
+                    onclick="updateQuantity('${item.id}', ${item.quantity - 1})"
+                >
+                    <i class="fas fa-minus"></i>
+                </button>
+                
+                <span class="w-8 text-center font-semibold">${item.quantity}</span>
+                
+                <button 
+                    class="quantity-btn w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center text-sm"
+                    onclick="updateQuantity('${item.id}', ${item.quantity + 1})"
+                >
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <button 
+                class="remove-item text-red-500 hover:text-red-700 p-2"
+                onclick="removeFromCart('${item.id}')"
+            >
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `).join('');
+}
+
+function animateBadge() {
+    cartBadge.classList.add('cart-badge');
+    cartBadgeMobile.classList.add('cart-badge');
+    
+    setTimeout(() => {
+        cartBadge.classList.remove('cart-badge');
+        cartBadgeMobile.classList.remove('cart-badge');
+    }, 500);
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300';
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full');
+    }, 100);
+     
+    setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Mobile Menu
+const btn = document.getElementById('menu-btn');
+const menu = document.getElementById('mobile-menu');
+
+btn.addEventListener('click', () => {
+  if (menu.style.maxHeight && menu.style.maxHeight !== "0px") {
+    menu.style.maxHeight = "0";
+  } else {
+    menu.style.maxHeight = menu.scrollHeight + "px";
   }
+});
 
-  renderCards("carousel-katalog", katalogProdukte, "katalog");
-  renderCards("carousel-review", kundenMeinungen, "review");
+window.addEventListener('resize', () => {
+  if(window.innerWidth >= 768) {
+    menu.style.maxHeight = "0";
+  }
+});
 
-  // === SCROLLING ===
-  const carouselButtons = document.querySelectorAll(".carousel-btn");
-  const pauseFlags = {};
+const hamburger = document.querySelector('.nav-hamburger');
+function toggleMenu() {
+    hamburger.classList.toggle('active');
+}
 
-  carouselButtons.forEach(button => {
-    const dir = parseInt(button.dataset.dir);
-    const carouselId = "carousel-" + button.dataset.carousel;
-    const carousel = document.getElementById(carouselId);
+// KUNDEN BEWERTUNGEN SCROLL
+const reviewTrack = document.getElementById('review-track');
+let reviewScroll = 0;
 
-    button.addEventListener("click", () => {
-      const card = carousel.querySelector("div");
-      const scrollAmount = 4*card.offsetWidth + 4*24;
-      carousel.scrollBy({ left: scrollAmount * dir, behavior: "smooth" });
-      pauseFlags[carouselId] = true;
-      setTimeout(() => pauseFlags[carouselId] = false, 5000);
-    });
+const scrollReviews = () => {
+  reviewScroll += 1;
+  reviewTrack.style.transform = `translateX(-${reviewScroll}px)`;
 
-    // Auto scroll
-    setInterval(() => {
-      if (!pauseFlags[carouselId]) {
-        const card = carousel.querySelector("div");
-        const scrollAmount = 2*card.offsetWidth + 2*24;
-        carousel.scrollBy({ left: scrollAmount, behavior: "smooth" });
-      }
-    }, 7000);
-  });
+  if (reviewScroll >= reviewTrack.scrollWidth - reviewTrack.clientWidth) {
+    reviewScroll = 0;
+  }
+};
+
+let reviewInterval = setInterval(scrollReviews, 20);
+
+reviewTrack.addEventListener('mouseenter', () => clearInterval(reviewInterval));
+reviewTrack.addEventListener('mouseleave', () => reviewInterval = setInterval(scrollReviews, 20));
+
+// FOOTER JAHR
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// WINE CAROUSEL FUNCTIONALITY
+let currentSlide = 0;
+const carousel = document.getElementById('wine-carousel');
+const cards = document.querySelectorAll('.wine-card');
+const cardWidth = 350; // card width + gap
+const visibleCards = 3; // Number of cards visible at once
+const maxSlide = Math.max(0, cards.length - visibleCards);
+
+function moveCarousel(direction) {
+  currentSlide += direction;
+  
+  // Boundary checks
+  if (currentSlide < 0) {
+    currentSlide = 0;
+  } else if (currentSlide > maxSlide) {
+    currentSlide = maxSlide;
+  }
+  
+  // Apply transform
+  const translateX = -currentSlide * cardWidth;
+  carousel.style.transform = `translateX(${translateX}px)`;
+  
+  // Update button states
+  updateButtonStates();
+}
+
+function updateButtonStates() {
+  const prevBtn = document.querySelector('button[onclick="moveCarousel(-1)"]');
+  const nextBtn = document.querySelector('button[onclick="moveCarousel(1)"]');
+  
+  if (prevBtn && nextBtn) {
+    prevBtn.style.opacity = currentSlide === 0 ? '0.5' : '1';
+    nextBtn.style.opacity = currentSlide >= maxSlide ? '0.5' : '1';
+    
+    prevBtn.style.pointerEvents = currentSlide === 0 ? 'none' : 'auto';
+    nextBtn.style.pointerEvents = currentSlide >= maxSlide ? 'none' : 'auto';
+  }
+}
+
+// Initialize button states
+updateButtonStates();
+
+// Optional: Auto-scroll functionality
+let autoScrollInterval;
+
+function startAutoScroll() {
+  autoScrollInterval = setInterval(() => {
+    if (currentSlide >= maxSlide) {
+      currentSlide = -1;
+    }
+    moveCarousel(1);
+  }, 4000);
+}
+
+function stopAutoScroll() {
+  clearInterval(autoScrollInterval);
+}
+
+// Start auto-scroll and pause on hover
+startAutoScroll();
+carousel.addEventListener('mouseenter', stopAutoScroll);
+carousel.addEventListener('mouseleave', startAutoScroll);
+
+// Newsletter Form
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('newsletter-email').value;
+    showNotification(`Danke! ${email} wurde erfolgreich angemeldet.`);
+    this.reset();
+});
+
+ let cookieSettings = {
+            necessary: true, // Immer aktiviert
+            analytics: false,
+            marketing: false,
+            functional: false
+        };
+
+        // Banner beim Laden der Seite anzeigen (nur wenn noch nicht entschieden)
+        window.addEventListener('load', function() {
+            const consent = getCookieConsent();
+            if (!consent) {
+                setTimeout(() => {
+                    showCookieBanner();
+                }, 800); // Kleine Verzögerung für bessere UX
+            } else {
+                updateStatusIndicator(consent.status);
+            }
+        });
+
+        function showCookieBanner() {
+            const banner = document.getElementById('cookieBanner');
+            banner.classList.add('show');
+        }
+
+        function hideCookieBanner() {
+            const banner = document.getElementById('cookieBanner');
+            banner.classList.add('hide');
+            setTimeout(() => {
+                banner.classList.remove('show', 'hide');
+            }, 400);
+        }
+
+        function acceptCookies() {
+            cookieSettings = {
+                necessary: true,
+                analytics: true,
+                marketing: true,
+                functional: true
+            };
+            
+            setCookieConsent({
+                status: 'accepted',
+                settings: cookieSettings,
+                timestamp: new Date().toISOString()
+            });
+            
+            hideCookieBanner();
+            updateStatusIndicator('✅ Alle Cookies akzeptiert');
+            
+            // Hier würden Sie Ihre Tracking-Scripts laden
+            loadTrackingScripts();
+        }
+
+        function declineCookies() {
+            cookieSettings = {
+                necessary: true,
+                analytics: false,
+                marketing: false,
+                functional: false
+            };
+            
+            setCookieConsent({
+                status: 'declined',
+                settings: cookieSettings,
+                timestamp: new Date().toISOString()
+            });
+            
+            hideCookieBanner();
+            updateStatusIndicator('❌ Cookies abgelehnt');
+            closeCookieSettings();
+        }
+
+        function openCookieSettings() {
+            const modal = document.getElementById('cookieModal');
+            modal.classList.add('show');
+            
+            // Aktuelle Einstellungen in der UI reflektieren
+            document.getElementById('analytics-toggle').classList.toggle('active', cookieSettings.analytics);
+            document.getElementById('marketing-toggle').classList.toggle('active', cookieSettings.marketing);
+            document.getElementById('functional-toggle').classList.toggle('active', cookieSettings.functional);
+        }
+
+        function closeCookieSettings() {
+            const modal = document.getElementById('cookieModal');
+            modal.classList.remove('show');
+        }
+
+        function toggleCookie(type) {
+            if (type !== 'necessary') {
+                cookieSettings[type] = !cookieSettings[type];
+                const toggle = document.getElementById(type + '-toggle');
+                toggle.classList.toggle('active');
+            }
+        }
+
+        function saveCustomSettings() {
+            setCookieConsent({
+                status: 'custom',
+                settings: cookieSettings,
+                timestamp: new Date().toISOString()
+            });
+            
+            hideCookieBanner();
+            closeCookieSettings();
+            
+            const activeCount = Object.values(cookieSettings).filter(Boolean).length;
+            updateStatusIndicator(`⚙️ ${activeCount}/4 Cookie-Typen aktiv`);
+            
+            // Nur genehmigte Scripts laden
+            loadSelectedTrackingScripts();
+        }
+
+        function showPrivacyPolicy() {
+            alert('Hier würde Ihre Datenschutzerklärung geöffnet werden.\n\nTypischerweise als separate Seite oder Modal mit detaillierten Informationen über Datenverarbeitung, Rechte der Nutzer, etc.');
+        }
+
+        function setCookieConsent(consent) {
+            // In einer echten Implementierung würden Sie dies als HTTP-Only Cookie setzen
+            const cookieData = {
+                ...consent,
+                expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+            };
+            
+            // Simulierte Cookie-Speicherung (normalerweise über Server)
+            document.cookie = `cookie_consent=${encodeURIComponent(JSON.stringify(cookieData))}; path=/; expires=${cookieData.expires}; SameSite=Strict`;
+        }
+
+        function getCookieConsent() {
+            const cookies = document.cookie.split(';');
+            const consentCookie = cookies.find(cookie => cookie.trim().startsWith('cookie_consent='));
+            
+            if (consentCookie) {
+                try {
+                    const value = decodeURIComponent(consentCookie.split('=')[1]);
+                    return JSON.parse(value);
+                } catch (e) {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        function updateStatusIndicator(status) {
+            document.getElementById('cookieStatus').textContent = status;
+        }
+
+        function loadTrackingScripts() {
+            console.log('🚀 Lade alle Tracking-Scripts...');
+            // Hier würden Sie Google Analytics, Facebook Pixel, etc. laden
+            
+            if (cookieSettings.analytics) {
+                console.log('📊 Analytics geladen');
+                // gtag('config', 'GA_MEASUREMENT_ID');
+            }
+            
+            if (cookieSettings.marketing) {
+                console.log('🎯 Marketing-Tracker geladen');
+                // Facebook Pixel, etc.
+            }
+            
+            if (cookieSettings.functional) {
+                console.log('🎨 Funktionale Scripts geladen');
+                // Chat-Widgets, etc.
+            }
+        }
+
+        function loadSelectedTrackingScripts() {
+            console.log('⚙️ Lade ausgewählte Tracking-Scripts...');
+            loadTrackingScripts();
+        }
+
+        // Modal schließen bei Klick außerhalb
+        document.getElementById('cookieModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCookieSettings();
+            }
+        });
+
+        // ESC-Taste zum Schließen des Modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCookieSettings();
+            }
+        });
 </script>
-
 
 </body>
 </html>
