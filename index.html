@@ -1,44 +1,4 @@
-<?php
-// Disable verbose error display in production. Set via ENV if needed.
-if (!getenv('DEV_MODE')) {
-    ini_set('display_errors', 0);
-    ini_set('display_startup_errors', 0);
-    error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-} else {
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-}
-session_start();
 
-// Am Anfang Ihrer index.php einfügen
-function checkWebsiteStatus() {
-    if (file_exists('website_offline.lock')) {
-        // Website komplett offline
-        header('HTTP/1.1 503 Service Unavailable');
-        echo '<!DOCTYPE html>
-<html><head><title>Website Offline</title></head>
-<body style="background:#0f0f0f;color:#fff;text-align:center;padding:100px;font-family:Arial;">
-<h1>🔧 Website ist offline</h1>
-<p>Die Website ist derzeit nicht verfügbar.</p>
-</body></html>';
-        exit;
-    } elseif (file_exists('website_maintenance.lock')) {
-        // Wartungsmodus aktiv
-        header('HTTP/1.1 503 Service Unavailable');
-        echo '<!DOCTYPE html>
-<html><head><title>Wartung</title></head>
-<body style="background:#1a1a1a;color:#fff;text-align:center;padding:100px;font-family:Arial;">
-<h1>⚠️ Wartungsmodus</h1>
-<p>Die Website wird gerade gewartet. Bitte versuchen Sie es später erneut.</p>
-</body></html>';
-        exit;
-    }
-}
-
-// Status prüfen (vor allem anderen Code)
-checkWebsiteStatus();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head> 
@@ -57,24 +17,22 @@ checkWebsiteStatus();
 
 <style>
 
-* {
-  touch-action: manipulation;
+:root {
+  --brand: #0f0f0f;
+  --brand-contrast: #ffffff;
 }
 
-.font-playfair {
-  font-family: 'Playfair Display', serif;
-}
+* { touch-action: manipulation; }
 
-/* Navbar */
-.nav-hamburger.active .nav-bar:nth-child(1) {
-    transform: translateY(11px) rotate(-135deg);
-}
-.nav-hamburger.active .nav-bar:nth-child(2) {
-    opacity: 0;
-}
-.nav-hamburger.active .nav-bar:nth-child(3) {
-    transform: translateY(-11px) rotate(135deg);
-}
+.font-playfair { font-family: 'Playfair Display', serif; }
+
+/* Small visual polish */
+section { scroll-margin-top: 80px; }
+
+/******* Navbar *******/
+.nav-hamburger.active .nav-bar:nth-child(1) { transform: translateY(11px) rotate(-135deg); }
+.nav-hamburger.active .nav-bar:nth-child(2) { opacity: 0; }
+.nav-hamburger.active .nav-bar:nth-child(3) { transform: translateY(-11px) rotate(135deg); }
 
 .form-floating {
     position: relative;
@@ -806,55 +764,7 @@ checkWebsiteStatus();
 </head>
 
 <body class="bg-gray-50">
-<?php
 
-// Datenbankverbindung
-$servername = getenv('DB_HOST') ?: "sql202.infinityfree.com";
-$username = getenv('DB_USER') ?: "if0_39480348";
-$password = getenv('DB_PASS') ?: "xMrsRstEXrohU9";
-$dbname = getenv('DB_NAME') ?: "if0_39480348_products";
-
-// Verbindung mit Datenbankauswahl erstellen
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verbindung prüfen
-if ($conn->connect_error) {
-    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
-}
-
-// Alle Weine ohne Limit abrufen (für das Karussell)
-$sql = "SELECT * FROM produkte ORDER BY name ASC";
-$result = $conn->query($sql);
-
-if (!$result) {
-    die("Ungültige Abfrage: " . $conn->error);
-}
-
-// Funktion zur Bestimmung des Weintyps basierend auf dem Namen
-function getWineType($name) {
-    $name = strtolower($name);
-    if (strpos($name, 'rot') !== false || strpos($name, 'spätburgunder') !== false || strpos($name, 'merlot') !== false) {
-        return ['type' => 'rotwein', 'label' => 'Rotwein'];
-    } elseif (strpos($name, 'rosé') !== false || strpos($name, 'rose') !== false) {
-        return ['type' => 'rose', 'label' => 'Rosé'];
-    } else {
-        return ['type' => 'weisswein', 'label' => 'Weißwein'];
-    }
-}
-
-// Funktion zur Bestimmung des Lagerbestand-Status
-function getStockStatus($stock) {
-    if ($stock <= 0) {
-        return ['class' => 'stock-out', 'text' => 'Ausverkauft'];
-    } elseif ($stock <= 10) {
-        return ['class' => 'stock-low', 'text' => 'Wenige verfügbar'];
-    } elseif ($stock <= 50) {
-        return ['class' => 'stock-medium', 'text' => 'Verfügbar'];
-    } else {
-        return ['class' => 'stock-high', 'text' => 'Gut verfügbar'];
-    }
-}
-?>
 <!-- Overlay -->
 <div id="cart-overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40"></div>
 
@@ -907,10 +817,10 @@ function getStockStatus($stock) {
   
   <!-- Desktop Menü -->
   <nav class="space-x-8 hidden md:flex">
-    <a href="#" class="text-gray-700 hover:text-black">Home</a>
-    <a href="katalog.php" class="text-gray-700 hover:text-black">Shop</a>
-    <a href="#" class="text-gray-700 hover:text-black">Blog</a>
-    <a href="#" class="text-gray-700 hover:text-black">Kontakt</a>
+    <a href="#" class="text-gray-700 hover:text-black transition-colors">Home</a>
+    <a href="#" class="text-gray-700 hover:text-black transition-colors">Shop</a>
+    <a href="#" class="text-gray-700 hover:text-black transition-colors">Blog</a>
+    <a href="#" class="text-gray-700 hover:text-black transition-colors">Kontakt</a>
   </nav>
   
   <!-- Warenkorb Button mit Badge -->
@@ -1036,65 +946,67 @@ function getStockStatus($stock) {
       >
         &rarr;
       </button>
-      <button 
+             <button 
         class="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 ml-2"
-      >
-       <a href="katalog.php">Shop Now</a>
-      </button>
+       >
+       <a href="#">Shop Now</a>
+       </button>
     </div>
 
-    <div class="wine-carousel-container relative">
+         <div class="wine-carousel-container relative">
       <div id="wine-carousel" class="wine-carousel">
-     <?php if ($result && $result->num_rows > 0): ?>
-    <?php $cardIndex = 0; ?>
-    <?php while($wine = $result->fetch_assoc()): ?>
-        <?php
-        $cardIndex++;
-        ?>
-        <div class="wine-card" style="animation-delay: <?php echo $cardIndex * 0.1; ?>s;">
-            <div class="wine-image-container">
-                <a href="details.php?id=<?php echo $wine['id']; ?>" style="text-decoration: none; color: inherit;">
-                    <?php if (!empty($wine['bild']) && file_exists($wine['bild'])): ?>
-                                                 <img src="<?php echo htmlspecialchars($wine['bild']); ?>" alt="<?php echo htmlspecialchars($wine['name']); ?>" class="wine-image" loading="lazy" decoding="async" fetchpriority="low">
-                    <?php else: ?>
-                        <div class="wine-image-placeholder">
-                            <i class="fas fa-wine-bottle"></i>
-                        </div>
-                    <?php endif; ?>
-                </a>
-                
-                <!-- Add to Cart Button - nur bei Hover sichtbar -->
-                <button
-                                         class="add-to-cart-btn add-to-cart"
-                     data-id="<?php echo $wine['id']; ?>"
-                     data-name="<?php echo htmlspecialchars($wine['name']); ?>"
-                     data-price="<?php echo $wine['preis']; ?>"
-                     data-image="<?php echo !empty($wine['bild']) && file_exists($wine['bild']) ? htmlspecialchars($wine['bild']) : 'https://via.placeholder.com/80x80/f0f0f0/999999?text=W'; ?>"
-                     onclick="event.preventDefault(); event.stopPropagation();"
-                     aria-label="In den Warenkorb"
-                 >
-                    <i class="fas fa-plus"></i>
-                    Hinzufügen
-                </button>
-            </div>
-            
-            <div class="wine-content">
-                <h3 class="wine-title"><?php echo htmlspecialchars($wine['name']); ?></h3>
-                <div class="wine-price">
-                    <?php echo number_format($wine['preis'], 2); ?> <span class="currency">€</span>
-                </div>
-            </div>
+        <!-- Static sample cards until backend is integrated -->
+        <div class="wine-card" style="animation-delay: 0.1s;">
+          <div class="wine-image-container">
+            <a href="#" style="text-decoration: none; color: inherit;">
+              <div class="wine-image-placeholder">
+                <i class="fas fa-wine-bottle"></i>
+              </div>
+            </a>
+            <button class="add-to-cart-btn add-to-cart" data-id="1" data-name="Riesling Feinherb" data-price="7.90" data-image="https://via.placeholder.com/80x80/f0f0f0/999999?text=W" onclick="event.preventDefault(); event.stopPropagation();" aria-label="In den Warenkorb">
+              <i class="fas fa-plus"></i>
+              Hinzufügen
+            </button>
+          </div>
+          <div class="wine-content">
+            <h3 class="wine-title">Riesling Feinherb</h3>
+            <div class="wine-price">7,90 <span class="currency">€</span></div>
+          </div>
         </div>
-    <?php endwhile; ?>
-<?php else: ?>
-    <div class="no-wines">
-        <i class="fas fa-wine-bottle"></i>
-        <h3>Keine Weine verfügbar</h3>
-        <p>Momentan sind keine Weine in unserem Sortiment.</p>
-    </div>
-<?php endif; ?>
-
-        
+        <div class="wine-card" style="animation-delay: 0.2s;">
+          <div class="wine-image-container">
+            <a href="#" style="text-decoration: none; color: inherit;">
+              <div class="wine-image-placeholder">
+                <i class="fas fa-wine-bottle"></i>
+              </div>
+            </a>
+            <button class="add-to-cart-btn add-to-cart" data-id="2" data-name="Spätburgunder Trocken" data-price="9.50" data-image="https://via.placeholder.com/80x80/f0f0f0/999999?text=W" onclick="event.preventDefault(); event.stopPropagation();" aria-label="In den Warenkorb">
+              <i class="fas fa-plus"></i>
+              Hinzufügen
+            </button>
+          </div>
+          <div class="wine-content">
+            <h3 class="wine-title">Spätburgunder Trocken</h3>
+            <div class="wine-price">9,50 <span class="currency">€</span></div>
+          </div>
+        </div>
+        <div class="wine-card" style="animation-delay: 0.3s;">
+          <div class="wine-image-container">
+            <a href="#" style="text-decoration: none; color: inherit;">
+              <div class="wine-image-placeholder">
+                <i class="fas fa-wine-bottle"></i>
+              </div>
+            </a>
+            <button class="add-to-cart-btn add-to-cart" data-id="3" data-name="Rosé Fruchtig" data-price="6.80" data-image="https://via.placeholder.com/80x80/f0f0f0/999999?text=W" onclick="event.preventDefault(); event.stopPropagation();" aria-label="In den Warenkorb">
+              <i class="fas fa-plus"></i>
+              Hinzufügen
+            </button>
+          </div>
+          <div class="wine-content">
+            <h3 class="wine-title">Rosé Fruchtig</h3>
+            <div class="wine-price">6,80 <span class="currency">€</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1118,7 +1030,7 @@ function getStockStatus($stock) {
 </section>
 
 <!-- BESTSELLER -->
-<section class="bg-gray-100 py-20 px-4">
+<section class="bg-gray-100 py-20 px-4" style="background: linear-gradient(180deg, #f5f5f5 0%, #ffffff 100%);">
   <div class="max-w-screen-2xl mx-auto text-center mb-12 px-4">
     <h2 class="text-4xl md:text-5xl font-playfair italic font-semibold mb-4">Unsere Bestseller</h2>
     <p class="text-gray-600 text-sm md:text-lg">Das beste aus unserem Wein und deshalb auch das bester für sie</p>
@@ -1297,7 +1209,7 @@ function getStockStatus($stock) {
 
 
 <!-- FOOTER -->
-<footer class="bg-white py-12 px-6 text-center text-xl md:text-lg md:text-left">
+<footer class="bg-white/90 backdrop-blur-sm py-12 px-6 text-center text-xl md:text-lg md:text-left">
   <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 border-t pt-12 border-gray-200">
 
     <div class="flex flex-col space-y-4 items-center md:items-start">
