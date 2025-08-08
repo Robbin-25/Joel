@@ -1,44 +1,4 @@
-<?php
-// Disable verbose error display in production. Set via ENV if needed.
-if (!getenv('DEV_MODE')) {
-    ini_set('display_errors', 0);
-    ini_set('display_startup_errors', 0);
-    error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-} else {
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-}
-session_start();
 
-// Am Anfang Ihrer index.php einfügen
-function checkWebsiteStatus() {
-    if (file_exists('website_offline.lock')) {
-        // Website komplett offline
-        header('HTTP/1.1 503 Service Unavailable');
-        echo '<!DOCTYPE html>
-<html><head><title>Website Offline</title></head>
-<body style="background:#0f0f0f;color:#fff;text-align:center;padding:100px;font-family:Arial;">
-<h1>🔧 Website ist offline</h1>
-<p>Die Website ist derzeit nicht verfügbar.</p>
-</body></html>';
-        exit;
-    } elseif (file_exists('website_maintenance.lock')) {
-        // Wartungsmodus aktiv
-        header('HTTP/1.1 503 Service Unavailable');
-        echo '<!DOCTYPE html>
-<html><head><title>Wartung</title></head>
-<body style="background:#1a1a1a;color:#fff;text-align:center;padding:100px;font-family:Arial;">
-<h1>⚠️ Wartungsmodus</h1>
-<p>Die Website wird gerade gewartet. Bitte versuchen Sie es später erneut.</p>
-</body></html>';
-        exit;
-    }
-}
-
-// Status prüfen (vor allem anderen Code)
-checkWebsiteStatus();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head> 
