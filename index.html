@@ -1,37 +1,3 @@
-<?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-session_start();
-
-// Am Anfang Ihrer index.php einfügen
-function checkWebsiteStatus() {
-    if (file_exists('website_offline.lock')) {
-        // Website komplett offline
-        header('HTTP/1.1 503 Service Unavailable');
-        echo '<!DOCTYPE html>
-<html><head><title>Website Offline</title></head>
-<body style="background:#0f0f0f;color:#fff;text-align:center;padding:100px;font-family:Arial;">
-<h1>🔧 Website ist offline</h1>
-<p>Die Website ist derzeit nicht verfügbar.</p>
-</body></html>';
-        exit;
-    } elseif (file_exists('website_maintenance.lock')) {
-        // Wartungsmodus aktiv
-        header('HTTP/1.1 503 Service Unavailable');
-        echo '<!DOCTYPE html>
-<html><head><title>Wartung</title></head>
-<body style="background:#1a1a1a;color:#fff;text-align:center;padding:100px;font-family:Arial;">
-<h1>⚠️ Wartungsmodus</h1>
-<p>Die Website wird gerade gewartet. Bitte versuchen Sie es später erneut.</p>
-</body></html>';
-        exit;
-    }
-}
-
-// Status prüfen (vor allem anderen Code)
-checkWebsiteStatus();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head> 
@@ -796,55 +762,7 @@ checkWebsiteStatus();
 </head>
 
 <body class="bg-gray-50">
-<?php
-
-// Datenbankverbindung
-$servername = "sql202.infinityfree.com";
-$username = "if0_39480348";
-$password = "xMrsRstEXrohU9";
-$dbname = "if0_39480348_products";
-
-// Verbindung mit Datenbankauswahl erstellen
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verbindung prüfen
-if ($conn->connect_error) {
-    die("Verbindung fehlgeschlagen: " . $conn->connect_error);
-}
-
-// Alle Weine ohne Limit abrufen (für das Karussell)
-$sql = "SELECT * FROM produkte ORDER BY name ASC";
-$result = $conn->query($sql);
-
-if (!$result) {
-    die("Ungültige Abfrage: " . $conn->error);
-}
-
-// Funktion zur Bestimmung des Weintyps basierend auf dem Namen
-function getWineType($name) {
-    $name = strtolower($name);
-    if (strpos($name, 'rot') !== false || strpos($name, 'spätburgunder') !== false || strpos($name, 'merlot') !== false) {
-        return ['type' => 'rotwein', 'label' => 'Rotwein'];
-    } elseif (strpos($name, 'rosé') !== false || strpos($name, 'rose') !== false) {
-        return ['type' => 'rose', 'label' => 'Rosé'];
-    } else {
-        return ['type' => 'weisswein', 'label' => 'Weißwein'];
-    }
-}
-
-// Funktion zur Bestimmung des Lagerbestand-Status
-function getStockStatus($stock) {
-    if ($stock <= 0) {
-        return ['class' => 'stock-out', 'text' => 'Ausverkauft'];
-    } elseif ($stock <= 10) {
-        return ['class' => 'stock-low', 'text' => 'Wenige verfügbar'];
-    } elseif ($stock <= 50) {
-        return ['class' => 'stock-medium', 'text' => 'Verfügbar'];
-    } else {
-        return ['class' => 'stock-high', 'text' => 'Gut verfügbar'];
-    }
-}
-?>
+<!-- Static build: PHP backend disabled -->
 <!-- Overlay -->
 <div id="cart-overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40"></div>
 
@@ -897,9 +815,9 @@ function getStockStatus($stock) {
   
   <!-- Desktop Menü -->
   <nav class="space-x-8 hidden md:flex">
-    <a href="#" class="text-gray-700 hover:text-black">Home</a>
-    <a href="katalog.php" class="text-gray-700 hover:text-black">Shop</a>
-    <a href="#" class="text-gray-700 hover:text-black">Blog</a>
+    <a href="index.html" class="text-gray-700 hover:text-black">Home</a>
+    <a href="katalogedemo.html" class="text-gray-700 hover:text-black">Shop</a>
+    <a href="blogdemo.html" class="text-gray-700 hover:text-black">Blog</a>
     <a href="#" class="text-gray-700 hover:text-black">Kontakt</a>
   </nav>
   
@@ -926,9 +844,9 @@ function getStockStatus($stock) {
 
 <!-- Mobile Dropdown Menü -->
 <nav id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white border-b-gray-300">
-  <a href="#" class="block px-8 py-4 border-b border-gray-200 text-gray-700 hover:bg-gray-100">Home</a>
-  <a href="#" class="block px-8 py-4 border-b border-gray-200 text-gray-700 hover:bg-gray-100">Shop</a>
-  <a href="#" class="block px-8 py-4 border-b border-gray-200 text-gray-800 hover:bg-gray-100">Blog</a>
+  <a href="index.html" class="block px-8 py-4 border-b border-gray-200 text-gray-700 hover:bg-gray-100">Home</a>
+  <a href="katalogedemo.html" class="block px-8 py-4 border-b border-gray-200 text-gray-700 hover:bg-gray-100">Shop</a>
+  <a href="blogdemo.html" class="block px-8 py-4 border-b border-gray-200 text-gray-800 hover:bg-gray-100">Blog</a>
   <a href="#" class="block px-8 py-4 text-gray-700 hover:bg-gray-100">Kontakt</a>
 </nav>
 
@@ -1027,61 +945,150 @@ function getStockStatus($stock) {
       <button 
         class="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 ml-2"
       >
-       <a href="katalog.php">Shop Now</a>
+       <a href="katalogedemo.html">Shop Now</a>
       </button>
     </div>
 
     <div class="wine-carousel-container relative">
       <div id="wine-carousel" class="wine-carousel">
-     <?php if ($result && $result->num_rows > 0): ?>
-    <?php $cardIndex = 0; ?>
-    <?php while($wine = $result->fetch_assoc()): ?>
-        <?php
-        $cardIndex++;
-        ?>
-        <div class="wine-card" style="animation-delay: <?php echo $cardIndex * 0.1; ?>s;">
-            <div class="wine-image-container">
-                <a href="details.php?id=<?php echo $wine['id']; ?>" style="text-decoration: none; color: inherit;">
-                    <?php if (!empty($wine['bild']) && file_exists($wine['bild'])): ?>
-                        <img src="<?php echo htmlspecialchars($wine['bild']); ?>" alt="<?php echo htmlspecialchars($wine['name']); ?>" class="wine-image">
-                    <?php else: ?>
-                        <div class="wine-image-placeholder">
-                            <i class="fas fa-wine-bottle"></i>
-                        </div>
-                    <?php endif; ?>
-                </a>
-                
-                <!-- Add to Cart Button - nur bei Hover sichtbar -->
-                <button
-                    class="add-to-cart-btn add-to-cart"
-                    data-id="<?php echo $wine['id']; ?>"
-                    data-name="<?php echo htmlspecialchars($wine['name']); ?>"
-                    data-price="<?php echo $wine['preis']; ?>"
-                    data-image="<?php echo !empty($wine['bild']) && file_exists($wine['bild']) ? htmlspecialchars($wine['bild']) : 'https://via.placeholder.com/80x80/f0f0f0/999999?text=W'; ?>"
-                    onclick="event.preventDefault(); event.stopPropagation();"
-                >
-                    <i class="fas fa-plus"></i>
-                    Hinzufügen
-                </button>
-            </div>
-            
-            <div class="wine-content">
-                <h3 class="wine-title"><?php echo htmlspecialchars($wine['name']); ?></h3>
-                <div class="wine-price">
-                    <?php echo number_format($wine['preis'], 2); ?> <span class="currency">€</span>
-                </div>
-            </div>
+        <!-- Static demo wine cards for static site build -->
+        <div class="wine-card" style="animation-delay: 0.1s;">
+          <div class="wine-image-container">
+            <a href="#" style="text-decoration: none; color: inherit;">
+              <img src="https://via.placeholder.com/600x400/EEE/999?text=Riesling" alt="Riesling Spätlese 2023" class="wine-image">
+            </a>
+            <button
+              class="add-to-cart-btn add-to-cart"
+              data-id="d1"
+              data-name="Riesling Spätlese 2023"
+              data-price="18.90"
+              data-image="https://via.placeholder.com/80x80/f0f0f0/999999?text=R"
+              onclick="event.preventDefault(); event.stopPropagation();"
+            >
+              <i class="fas fa-plus"></i>
+              Hinzufügen
+            </button>
+          </div>
+          <div class="wine-content">
+            <h3 class="wine-title">Riesling Spätlese 2023</h3>
+            <div class="wine-price">18.90 <span class="currency">€</span></div>
+          </div>
         </div>
-    <?php endwhile; ?>
-<?php else: ?>
-    <div class="no-wines">
-        <i class="fas fa-wine-bottle"></i>
-        <h3>Keine Weine verfügbar</h3>
-        <p>Momentan sind keine Weine in unserem Sortiment.</p>
-    </div>
-<?php endif; ?>
 
-        
+        <div class="wine-card" style="animation-delay: 0.2s;">
+          <div class="wine-image-container">
+            <a href="#" style="text-decoration: none; color: inherit;">
+              <img src="https://via.placeholder.com/600x400/DDD/777?text=Sp%C3%A4tburgunder" alt="Spätburgunder 2022" class="wine-image">
+            </a>
+            <button
+              class="add-to-cart-btn add-to-cart"
+              data-id="d2"
+              data-name="Spätburgunder 2022"
+              data-price="24.50"
+              data-image="https://via.placeholder.com/80x80/8B0000/FFFFFF?text=S"
+              onclick="event.preventDefault(); event.stopPropagation();"
+            >
+              <i class="fas fa-plus"></i>
+              Hinzufügen
+            </button>
+          </div>
+          <div class="wine-content">
+            <h3 class="wine-title">Spätburgunder 2022</h3>
+            <div class="wine-price">24.50 <span class="currency">€</span></div>
+          </div>
+        </div>
+
+        <div class="wine-card" style="animation-delay: 0.3s;">
+          <div class="wine-image-container">
+            <a href="#" style="text-decoration: none; color: inherit;">
+              <img src="https://via.placeholder.com/600x400/F5F5DC/999?text=Grauburgunder" alt="Grauburgunder trocken 2023" class="wine-image">
+            </a>
+            <button
+              class="add-to-cart-btn add-to-cart"
+              data-id="d3"
+              data-name="Grauburgunder trocken 2023"
+              data-price="16.80"
+              data-image="https://via.placeholder.com/80x80/F5F5DC/999999?text=G"
+              onclick="event.preventDefault(); event.stopPropagation();"
+            >
+              <i class="fas fa-plus"></i>
+              Hinzufügen
+            </button>
+          </div>
+          <div class="wine-content">
+            <h3 class="wine-title">Grauburgunder trocken 2023</h3>
+            <div class="wine-price">16.80 <span class="currency">€</span></div>
+          </div>
+        </div>
+
+        <div class="wine-card" style="animation-delay: 0.4s;">
+          <div class="wine-image-container">
+            <a href="#" style="text-decoration: none; color: inherit;">
+              <img src="https://via.placeholder.com/600x400/FFB6C1/999?text=Ros%C3%A9" alt="Rosé Cuvée 2023" class="wine-image">
+            </a>
+            <button
+              class="add-to-cart-btn add-to-cart"
+              data-id="d4"
+              data-name="Rosé Cuvée 2023"
+              data-price="14.90"
+              data-image="https://via.placeholder.com/80x80/FFB6C1/999999?text=R"
+              onclick="event.preventDefault(); event.stopPropagation();"
+            >
+              <i class="fas fa-plus"></i>
+              Hinzufügen
+            </button>
+          </div>
+          <div class="wine-content">
+            <h3 class="wine-title">Rosé Cuvée 2023</h3>
+            <div class="wine-price">14.90 <span class="currency">€</span></div>
+          </div>
+        </div>
+
+        <div class="wine-card" style="animation-delay: 0.5s;">
+          <div class="wine-image-container">
+            <a href="#" style="text-decoration: none; color: inherit;">
+              <img src="https://via.placeholder.com/600x400/E6E6FA/999?text=M%C3%BCller-Thurgau" alt="Müller-Thurgau 2023" class="wine-image">
+            </a>
+            <button
+              class="add-to-cart-btn add-to-cart"
+              data-id="d5"
+              data-name="Müller-Thurgau 2023"
+              data-price="12.90"
+              data-image="https://via.placeholder.com/80x80/E6E6FA/999999?text=M"
+              onclick="event.preventDefault(); event.stopPropagation();"
+            >
+              <i class="fas fa-plus"></i>
+              Hinzufügen
+            </button>
+          </div>
+          <div class="wine-content">
+            <h3 class="wine-title">Müller-Thurgau 2023</h3>
+            <div class="wine-price">12.90 <span class="currency">€</span></div>
+          </div>
+        </div>
+
+        <div class="wine-card" style="animation-delay: 0.6s;">
+          <div class="wine-image-container">
+            <a href="#" style="text-decoration: none; color: inherit;">
+              <img src="https://via.placeholder.com/600x400/98FB98/777?text=Sauvignon+Blanc" alt="Sauvignon Blanc 2023" class="wine-image">
+            </a>
+            <button
+              class="add-to-cart-btn add-to-cart"
+              data-id="d6"
+              data-name="Sauvignon Blanc 2023"
+              data-price="17.90"
+              data-image="https://via.placeholder.com/80x80/98FB98/999999?text=S"
+              onclick="event.preventDefault(); event.stopPropagation();"
+            >
+              <i class="fas fa-plus"></i>
+              Hinzufügen
+            </button>
+          </div>
+          <div class="wine-content">
+            <h3 class="wine-title">Sauvignon Blanc 2023</h3>
+            <div class="wine-price">17.90 <span class="currency">€</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1193,7 +1200,7 @@ function getStockStatus($stock) {
             <i class="fas fa-user text-white"></i>
           </div>
           <h3 class="text-lg font-semibold mb-1">Julia Meier</h3>
-          <p class="text-sm text-wrap text-gray-600 mb-2">„Der beste Wein, den ich je probiert habe!"</p>
+          <p class="text-sm text-wrap text-gray-600 mb-2">"Der beste Wein, den ich je probiert habe!"</p>
           <div class="text-yellow-500 text-sm">★★★★★</div>
         </div>
 
@@ -1203,7 +1210,7 @@ function getStockStatus($stock) {
             <i class="fas fa-user text-white"></i>
           </div>
           <h3 class="text-lg font-semibold mb-1">Tom Schneider</h3>
-          <p class="text-sm text-wrap text-gray-600 mb-2">„Sehr schneller Versand und tolle Qualität!"</p>
+          <p class="text-sm text-wrap text-gray-600 mb-2">"Sehr schneller Versand und tolle Qualität!"</p>
           <div class="text-yellow-500 text-sm">★★★★☆</div>
         </div>
 
@@ -1213,7 +1220,7 @@ function getStockStatus($stock) {
             <i class="fas fa-user text-white"></i>
           </div>
           <h3 class="text-lg font-semibold mb-1">Samira K.</h3>
-          <p class="text-sm text-wrap text-gray-600 mb-2">„Bin begeistert – meine neue Lieblingsseite."</p>
+          <p class="text-sm text-wrap text-gray-600 mb-2">"Bin begeistert – meine neue Lieblingsseite."</p>
           <div class="text-yellow-500 text-sm">★★★★★</div>
         </div>
 
@@ -1223,7 +1230,7 @@ function getStockStatus($stock) {
             <i class="fas fa-user text-white"></i>
           </div>
           <h3 class="text-lg font-semibold mb-1">Max Mueller</h3>
-          <p class="text-sm text-wrap text-gray-600 mb-2">„Hervorragende Beratung und perfekte Weine!"</p>
+          <p class="text-sm text-wrap text-gray-600 mb-2">"Hervorragende Beratung und perfekte Weine!"</p>
           <div class="text-yellow-500 text-sm">★★★★★</div>
         </div>
 
@@ -1233,7 +1240,7 @@ function getStockStatus($stock) {
             <i class="fas fa-user text-white"></i>
           </div>
           <h3 class="text-lg font-semibold mb-1">Anna Weber</h3>
-          <p class="text-sm text-wrap text-gray-600 mb-2">„Immer wieder gerne! Tolle Auswahl und Service."</p>
+          <p class="text-sm text-wrap text-gray-600 mb-2">"Immer wieder gerne! Tolle Auswahl und Service."</p>
           <div class="text-yellow-500 text-sm">★★★★★</div>
         </div>
 
@@ -1243,7 +1250,7 @@ function getStockStatus($stock) {
             <i class="fas fa-user text-white"></i>
           </div>
           <h3 class="text-lg font-semibold mb-1">Klaus Fischer</h3>
-          <p class="text-sm text-wrap text-gray-600 mb-2">„Premium Qualität zu fairen Preisen!"</p>
+          <p class="text-sm text-wrap text-gray-600 mb-2">"Premium Qualität zu fairen Preisen!"</p>
           <div class="text-yellow-500 text-sm">★★★★☆</div>
         </div>
 
@@ -1737,7 +1744,7 @@ carousel.addEventListener('mouseleave', startAutoScroll);
 // Newsletter Form
 document.querySelector('form').addEventListener('submit', function(e) {
     e.preventDefault();
-    const email = document.getElementById('newsletter-email').value;
+    const email = document.getElementById('login-email').value;
     showNotification(`Danke! ${email} wurde erfolgreich angemeldet.`);
     this.reset();
 });
