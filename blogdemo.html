@@ -31,24 +31,13 @@
             color: #333;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+
 
         h1 {
-            text-align: left;
-            color: #2c3e50;
-            padding: 8px;
-            font-size: 2.5rem ;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            @apply text-left text-[#2c3e50] px-2 text-4xl;
         }
 
         .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
             margin-bottom: 40px;
         }
 
@@ -251,8 +240,8 @@
         <button class="w-full bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-b">Warenkorb</button>
     </nav>
 
-    <div class="container">
-        <h1>Unsere Blogs</h1>
+    <div class="max-w-[1200px] mx-auto px-5">
+        <h1 class="text-left text-[#2c3e50] px-2 text-4xl">Unsere Blogs</h1>
         
         <div class="text-center mb-8">
             <input type="text" id="searchInput" class="search-input w-full max-w-[1440px] border-2 border-gray-200 rounded-xl px-5 py-3 focus:border-black outline-none" placeholder="Suche nach Blogs...">
@@ -419,17 +408,17 @@
                 <a href="#" class="blog-link" onclick="openBlogDetail(${blog.id})">
                     <div class="blog-card rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition" style="animation-delay: ${index * 0.1}s;">
                         ${blog.image ? 
-                           `<img src="${blog.image}" alt="${blog.title}" class="blog-image">` :
-                            `<div class="blog-image-placeholder"><i class="fas fa-blog"></i></div>`
+                           `<img src="${blog.image}" alt="${blog.title}" class="blog-image w-full h-[300px] object-cover rounded-[15px] transition-transform">` :
+                            `<div class="blog-image-placeholder w-full h-[300px] flex items-center justify-center text-white text-5xl rounded-[15px]"><i class="fas fa-blog"></i></div>`
                         }
-                        <div class="blog-content">
-                            <h3 class="blog-title">${blog.title}</h3>
-                            <div class="blog-region">
+                        <div class="blog-content p-6">
+                            <h3 class="blog-title text-[1.4rem] mb-2 text-[#2c3e50] font-semibold">${blog.title}</h3>
+                            <div class="blog-region text-[#7f8c8d] mb-4 text-[0.9rem] flex items-center">
                                 <i class="fas fa-calendar-alt"></i>
                                 ${formatDate(blog.created_at)}
                             </div>
-                            <p class="blog-description">${blog.summary.length > 150 ? blog.summary.substring(0, 150) + '...' : blog.summary}</p>
-                            <div class="blog-footer">
+                            <p class="blog-description text-[#5d6d7e] leading-6 mb-5 text-[0.95rem]">${blog.summary.length > 150 ? blog.summary.substring(0, 150) + '...' : blog.summary}</p>
+                            <div class="blog-footer flex justify-between items-center border-t border-[#ecf0f1] pt-4">
                                 <div class="blog-author">
                                     <i class="fas fa-user"></i>
                                     ${blog.blogname}
