@@ -1,17 +1,48 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+session_start();
+
+// Am Anfang Ihrer index.php einfügen
+function checkWebsiteStatus() {
+    if (file_exists('website_offline.lock')) {
+        // Website komplett offline
+        header('HTTP/1.1 503 Service Unavailable');
+        echo '<!DOCTYPE html>
+<html><head><title>Website Offline</title></head>
+<body style="background:#0f0f0f;color:#fff;text-align:center;padding:100px;font-family:Arial;">
+<h1>🔧 Website ist offline</h1>
+<p>Die Website ist derzeit nicht verfügbar.</p>
+</body></html>';
+        exit;
+    } elseif (file_exists('website_maintenance.lock')) {
+        // Wartungsmodus aktiv
+        header('HTTP/1.1 503 Service Unavailable');
+        echo '<!DOCTYPE html>
+<html><head><title>Wartung</title></head>
+<body style="background:#1a1a1a;color:#fff;text-align:center;padding:100px;font-family:Arial;">
+<h1>⚠️ Wartungsmodus</h1>
+<p>Die Website wird gerade gewartet. Bitte versuchen Sie es später erneut.</p>
+</body></html>';
+        exit;
+    }
+}
+
+// Status prüfen (vor allem anderen Code)
+checkWebsiteStatus();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head> 
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Weingut Friedel Hermann</title>
   
   <!-- FIXED: Korrekte Tailwind CSS Einbindung -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
@@ -768,10 +799,10 @@
 <?php
 
 // Datenbankverbindung
-$servername = getenv('DB_HOST') ?: "sql202.infinityfree.com";
-$username = getenv('DB_USER') ?: "if0_39480348";
-$password = getenv('DB_PASS') ?: "xMrsRstEXrohU9";
-$dbname = getenv('DB_NAME') ?: "if0_39480348_products";
+$servername = "sql202.infinityfree.com";
+$username = "if0_39480348";
+$password = "xMrsRstEXrohU9";
+$dbname = "if0_39480348_products";
 
 // Verbindung mit Datenbankauswahl erstellen
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -897,8 +928,8 @@ function getStockStatus($stock) {
 <nav id="mobile-menu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-white border-b-gray-300">
   <a href="#" class="block px-8 py-4 border-b border-gray-200 text-gray-700 hover:bg-gray-100">Home</a>
   <a href="#" class="block px-8 py-4 border-b border-gray-200 text-gray-700 hover:bg-gray-100">Shop</a>
-  <a href="blogdemo.html" class="block px-8 py-4 border-b border-gray-200 text-gray-800 hover:bg-gray-100">Blog</a>
-  <a href="katalogedemo.html" class="block px-8 py-4 text-gray-700 hover:bg-gray-100">Kontakt</a>
+  <a href="#" class="block px-8 py-4 border-b border-gray-200 text-gray-800 hover:bg-gray-100">Blog</a>
+  <a href="#" class="block px-8 py-4 text-gray-700 hover:bg-gray-100">Kontakt</a>
 </nav>
 
 <!-- HERO -->
@@ -912,8 +943,8 @@ function getStockStatus($stock) {
     <button class="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded font-semibold">Shop Now</button>
   </div>
   <div class="md:w-1/2 flex justify-center relative">
-      <div class="w-96 h-96 bg-gradient-to-br from-purple-600 to-blue-500 rounded-full flex items-center justify-center" aria-hidden="true">
-        <i class="fas fa-wine-bottle text-white text-8xl" aria-hidden="true"></i>
+      <div class="w-96 h-96 bg-gradient-to-br from-purple-600 to-blue-500 rounded-full flex items-center justify-center">
+        <i class="fas fa-wine-bottle text-white text-8xl"></i>
       </div>
   </div>
 </section>
@@ -984,14 +1015,12 @@ function getStockStatus($stock) {
       <button 
         onclick="moveCarousel(-1)" 
         class="bg-white p-2 rounded-full hover:bg-gray-100 border border-gray-200 transition-all duration-200 w-10 h-10 flex items-center justify-center"
-        aria-label="Vorherige Weine"
       >
         &larr;
       </button>
       <button 
         onclick="moveCarousel(1)" 
         class="bg-white p-2 rounded-full hover:bg-gray-100 border border-gray-200 transition-all duration-200 w-10 h-10 flex items-center justify-center"
-        aria-label="Nächste Weine"
       >
         &rarr;
       </button>
@@ -1014,7 +1043,7 @@ function getStockStatus($stock) {
             <div class="wine-image-container">
                 <a href="details.php?id=<?php echo $wine['id']; ?>" style="text-decoration: none; color: inherit;">
                     <?php if (!empty($wine['bild']) && file_exists($wine['bild'])): ?>
-                                                 <img src="<?php echo htmlspecialchars($wine['bild']); ?>" alt="<?php echo htmlspecialchars($wine['name']); ?>" class="wine-image" loading="lazy" decoding="async" fetchpriority="low">
+                        <img src="<?php echo htmlspecialchars($wine['bild']); ?>" alt="<?php echo htmlspecialchars($wine['name']); ?>" class="wine-image">
                     <?php else: ?>
                         <div class="wine-image-placeholder">
                             <i class="fas fa-wine-bottle"></i>
@@ -1024,14 +1053,13 @@ function getStockStatus($stock) {
                 
                 <!-- Add to Cart Button - nur bei Hover sichtbar -->
                 <button
-                                         class="add-to-cart-btn add-to-cart"
-                     data-id="<?php echo $wine['id']; ?>"
-                     data-name="<?php echo htmlspecialchars($wine['name']); ?>"
-                     data-price="<?php echo $wine['preis']; ?>"
-                     data-image="<?php echo !empty($wine['bild']) && file_exists($wine['bild']) ? htmlspecialchars($wine['bild']) : 'https://via.placeholder.com/80x80/f0f0f0/999999?text=W'; ?>"
-                     onclick="event.preventDefault(); event.stopPropagation();"
-                     aria-label="In den Warenkorb"
-                 >
+                    class="add-to-cart-btn add-to-cart"
+                    data-id="<?php echo $wine['id']; ?>"
+                    data-name="<?php echo htmlspecialchars($wine['name']); ?>"
+                    data-price="<?php echo $wine['preis']; ?>"
+                    data-image="<?php echo !empty($wine['bild']) && file_exists($wine['bild']) ? htmlspecialchars($wine['bild']) : 'https://via.placeholder.com/80x80/f0f0f0/999999?text=W'; ?>"
+                    onclick="event.preventDefault(); event.stopPropagation();"
+                >
                     <i class="fas fa-plus"></i>
                     Hinzufügen
                 </button>
@@ -1069,8 +1097,8 @@ function getStockStatus($stock) {
       <button class="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded">Explore More</button>
     </div>
     <div class="md:w-1/2 flex justify-end">
-      <div class="w-64 h-96 bg-gradient-to-br from-amber-600 to-red-600 rounded-2xl flex items-center justify-center xl:mr-80" aria-hidden="true">
-        <i class="fas fa-wine-glass text-white text-6xl" aria-hidden="true"></i>
+      <div class="w-64 h-96 bg-gradient-to-br from-amber-600 to-red-600 rounded-2xl flex items-center justify-center xl:mr-80">
+        <i class="fas fa-wine-glass text-white text-6xl"></i>
       </div>
     </div>
   </div>
@@ -1089,8 +1117,8 @@ function getStockStatus($stock) {
     <div class="relative max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 md:gap-4">
       <!-- Bild -->
       <div class="bg-black rounded-2xl pt-2 px-4 shadow-2xl md:w-[70%] w-full max-w-[500px]">
-                 <div class="w-full max-w-[380px] h-64 mx-auto bg-gradient-to-br from-red-500 to-purple-600 rounded-lg flex items-center justify-center" aria-hidden="true">
-          <i class="fas fa-wine-bottle text-white text-6xl" aria-hidden="true"></i>
+        <div class="w-full max-w-[380px] h-64 mx-auto bg-gradient-to-br from-red-500 to-purple-600 rounded-lg flex items-center justify-center">
+          <i class="fas fa-wine-bottle text-white text-6xl"></i>
         </div>
       </div>
       <!-- Textkarte -->
@@ -1110,8 +1138,8 @@ function getStockStatus($stock) {
     <div class="relative max-w-screen-2xl mx-auto flex flex-col md:flex-row-reverse items-center justify-center gap-6 md:gap-4">
       <!-- Bild -->
       <div class="bg-black rounded-2xl pt-2 px-4 shadow-2xl md:w-[70%] w-full max-w-[500px]">
-                 <div class="w-full max-w-[380px] h-64 mx-auto bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center" aria-hidden="true">
-          <i class="fas fa-wine-bottle text-white text-6xl" aria-hidden="true"></i>
+        <div class="w-full max-w-[380px] h-64 mx-auto bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
+          <i class="fas fa-wine-bottle text-white text-6xl"></i>
         </div>
       </div>
       <!-- Textkarte -->
@@ -1131,8 +1159,8 @@ function getStockStatus($stock) {
     <div class="relative max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 md:gap-4">
       <!-- Bild -->
       <div class="bg-black rounded-2xl pt-2 px-4 shadow-2xl md:w-[70%] w-full max-w-[500px]">
-                 <div class="w-full max-w-[380px] h-64 mx-auto bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center" aria-hidden="true">
-          <i class="fas fa-wine-bottle text-white text-6xl" aria-hidden="true"></i>
+        <div class="w-full max-w-[380px] h-64 mx-auto bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
+          <i class="fas fa-wine-bottle text-white text-6xl"></i>
         </div>
       </div>
       <!-- Textkarte -->
@@ -1266,16 +1294,16 @@ function getStockStatus($stock) {
       <div class="w-24 border-t-2 border-gray-600 mt-4 mb-4"></div>
       <div class="flex gap-4">
         <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
-          <i class="fab fa-facebook-f text-gray-700 hover:text-black" aria-hidden="true"></i>
+          <i class="fab fa-facebook-f text-gray-700 hover:text-black"></i>
         </a>
         <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
-          <i class="fab fa-instagram text-gray-700 hover:text-black" aria-hidden="true"></i>
+          <i class="fab fa-instagram text-gray-700 hover:text-black"></i>
         </a>
         <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
-          <i class="fab fa-twitter text-gray-700 hover:text-black" aria-hidden="true"></i>
+          <i class="fab fa-twitter text-gray-700 hover:text-black"></i>
         </a>
         <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
-          <i class="fab fa-youtube text-gray-700 hover:text-black" aria-hidden="true"></i>
+          <i class="fab fa-youtube text-gray-700 hover:text-black"></i>
         </a>
       </div>
       <a href="#"><p class="text-gray-500 hover:text-black">Anmelden/Registrieren</p></a>
@@ -1298,7 +1326,7 @@ function getStockStatus($stock) {
       <div class="space-y-4">
         <div class="flex items-start hover:cursor-pointer gap-4">
           <div class="w-10 h-10 flex justify-center items-center border border-gray-600 hover:border-black rounded-full">
-            <i class="fas fa-phone text-gray-700 hover:text-black" aria-hidden="true"></i>
+            <i class="fas fa-phone text-gray-700 hover:text-black"></i>
           </div>
           <div>
             <p class="font-bold">Telefon</p>
@@ -1307,7 +1335,7 @@ function getStockStatus($stock) {
         </div>
         <div class="flex items-start hover:cursor-pointer gap-4">
           <div class="w-10 h-10 flex justify-center items-center border border-gray-600 hover:border-black rounded-full">
-            <i class="fas fa-envelope text-gray-700 hover:text-black" aria-hidden="true"></i>
+            <i class="fas fa-envelope text-gray-700 hover:text-black"></i>
           </div>
           <div>
             <p class="font-bold">Email</p>
@@ -1316,7 +1344,7 @@ function getStockStatus($stock) {
         </div>
         <div class="flex items-start hover:cursor-pointer gap-4">
           <div class="w-10 h-10 flex justify-center items-center border border-gray-600 hover:border-black rounded-full">
-            <i class="fas fa-location-dot text-gray-700 hover:text-black" aria-hidden="true"></i>
+            <i class="fas fa-location-dot text-gray-700 hover:text-black"></i>
           </div>
           <div>
             <p class="font-bold">Location</p>
@@ -1350,7 +1378,7 @@ function getStockStatus($stock) {
                 <button class="cookie-btn btn-accept" onclick="acceptCookies()">Alle akzeptieren</button>
                 <button class="cookie-btn btn-decline" onclick="declineCookies()">Ablehnen</button>
                 <button class="cookie-btn btn-settings" onclick="openCookieSettings()">Einstellungen</button>
-                <a href="datenschutz.html" class="cookie-btn btn-privacy" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                <a href="datenschutz.html" class="cookie-btn btn-privacy" target="_blank">Datenschutz</a>
             </div>
         </div>
     </div>
@@ -1535,7 +1563,7 @@ function updateCart() {
 function renderCartItems() {
     cartItemsList.innerHTML = cart.map(item => `
         <div class="cart-item flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded" loading="lazy" decoding="async">
+            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
             
             <div class="flex-1">
                 <h4 class="font-semibold text-sm mb-1">${item.name}</h4>
@@ -1622,30 +1650,23 @@ function toggleMenu() {
     hamburger.classList.toggle('active');
 }
 
-// KUNDEN BEWERTUNGEN SCROLL (rAF, respects reduced motion)
+// KUNDEN BEWERTUNGEN SCROLL
 const reviewTrack = document.getElementById('review-track');
 let reviewScroll = 0;
-let lastTs = 0;
-let paused = false;
-const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function rafScroll(ts) {
-  if (!prefersReduced && !paused) {
-    const dt = lastTs ? (ts - lastTs) : 16;
-    const pxPerMs = 0.05; // ~3px per 60ms
-    reviewScroll += dt * pxPerMs;
-    if (reviewScroll >= reviewTrack.scrollWidth - reviewTrack.clientWidth) {
-      reviewScroll = 0;
-    }
-    reviewTrack.style.transform = `translateX(-${Math.floor(reviewScroll)}px)`;
+const scrollReviews = () => {
+  reviewScroll += 1;
+  reviewTrack.style.transform = `translateX(-${reviewScroll}px)`;
+
+  if (reviewScroll >= reviewTrack.scrollWidth - reviewTrack.clientWidth) {
+    reviewScroll = 0;
   }
-  lastTs = ts;
-  requestAnimationFrame(rafScroll);
-}
-requestAnimationFrame(rafScroll);
+};
 
-reviewTrack.addEventListener('mouseenter', () => { paused = true; });
-reviewTrack.addEventListener('mouseleave', () => { paused = false; });
+let reviewInterval = setInterval(scrollReviews, 20);
+
+reviewTrack.addEventListener('mouseenter', () => clearInterval(reviewInterval));
+reviewTrack.addEventListener('mouseleave', () => reviewInterval = setInterval(scrollReviews, 20));
 
 // FOOTER JAHR
 document.getElementById('year').textContent = new Date().getFullYear();
@@ -1716,8 +1737,7 @@ carousel.addEventListener('mouseleave', startAutoScroll);
 // Newsletter Form
 document.querySelector('form').addEventListener('submit', function(e) {
     e.preventDefault();
-    const emailInput = document.querySelector('input[name="email"]');
-    const email = emailInput ? emailInput.value : '';
+    const email = document.getElementById('newsletter-email').value;
     showNotification(`Danke! ${email} wurde erfolgreich angemeldet.`);
     this.reset();
 });
@@ -1846,8 +1866,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
             };
             
             // Simulierte Cookie-Speicherung (normalerweise über Server)
-            const secureAttr = window.location.protocol === 'https:' ? '; Secure' : '';
-            document.cookie = `cookie_consent=${encodeURIComponent(JSON.stringify(cookieData))}; path=/; expires=${cookieData.expires}; SameSite=Strict${secureAttr}`;
+            document.cookie = `cookie_consent=${encodeURIComponent(JSON.stringify(cookieData))}; path=/; expires=${cookieData.expires}; SameSite=Strict`;
         }
 
         function getCookieConsent() {
