@@ -254,11 +254,11 @@
     <div class="container">
         <h1>Unsere Blogs</h1>
         
-        <div style="text-align: center; margin-bottom: 30px;">
-            <input type="text" id="searchInput" class="search-input" placeholder="Suche nach Blogs...">
+        <div class="text-center mb-8">
+            <input type="text" id="searchInput" class="search-input w-full max-w-[1440px] border-2 border-gray-200 rounded-xl px-5 py-3 focus:border-black outline-none" placeholder="Suche nach Blogs...">
         </div>
 
-        <div class="blog-grid" id="blogGrid">
+        <div class="blog-grid grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="blogGrid">
             <!-- Demo Blog Cards werden hier eingefügt -->
         </div>
 
@@ -273,79 +273,7 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="bg-white py-12 px-6 text-center text-xl md:text-lg md:text-left">
-        <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 border-t pt-12 border-gray-200">
-            <div class="flex flex-col space-y-4 items-center md:items-start">
-                <h2 class="text-4xl font-playfair italic">YOURLOGO</h2>
-                <p class="uppercase font-bold tracking-widest text-xl md:text-lg">Company</p>
-                <p class="text-gray-600 text-center text-lg md:text-sm">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam</p>
-                <div class="w-24 border-t-2 border-gray-600 mt-4 mb-4"></div>
-                <div class="flex gap-4">
-                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
-                        <i class="fab fa-facebook-f text-gray-700 hover:text-black"></i>
-                    </a>
-                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
-                        <i class="fab fa-instagram text-gray-700 hover:text-black"></i>
-                    </a>
-                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
-                        <i class="fab fa-weixin text-gray-700 hover:text-black"></i>
-                    </a>
-                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-600 hover:border-black rounded-full hover:bg-gray-100 transition">
-                        <i class="fab fa-youtube text-gray-700 hover:text-black"></i>
-                    </a>
-                </div>
-                <a href="#"><p class="text-gray-500 hover:text-black">Anmelden/Registrieren</p></a>
-            </div>
 
-            <div class="space-y-4 border-t md:border-t-0 md:border-l border-gray-300 pl-6 pt-6 max-w-[500px] w-full mx-auto">
-                <h3 class="text-2xl md:text-xl font-bold">Quick Links</h3>
-                <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-gray-700">Home</a></li>
-                    <li><a href="#" class="hover:text-gray-700">About Us</a></li>
-                    <li><a href="#" class="hover:text-gray-700">Our Services</a></li>
-                    <li><a href="#" class="hover:text-gray-700">Datenschutz</a></li>
-                    <li><a href="#" class="hover:text-gray-700">Impressum</a></li>
-                    <li><a href="#" class="hover:text-gray-700">Testimonials</a></li>
-                </ul>
-            </div>
-
-            <div class="flex flex-col space-y-6 border-t md:border-t-0 md:border-l border-gray-300 pl-6 pt-6 items-center md:items-start text-left max-w-[500px] w-full mx-auto">
-                <h3 class="text-2xl md:text-xl font-bold">Contact Us</h3>
-                <div>
-                    <div class="flex items-start hover:cursor-pointer gap-4">
-                        <div class="w-10 h-10 flex justify-center items-center border border-gray-600 hover:border-black rounded-full">
-                            <i class="fas fa-phone text-gray-700 hover:text-black"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold">Telefon</p>
-                            <p class="text-gray-600 text-lg md:text-sm">+49 123 456 789</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start hover:cursor-pointer gap-4">
-                        <div class="w-10 h-10 flex justify-center items-center border border-gray-600 hover:border-black rounded-full">
-                            <i class="fas fa-envelope text-gray-700 hover:text-black"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold">Email</p>
-                            <p class="text-gray-600 text-lg md:text-sm">info@weingut-friedel.de</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start hover:cursor-pointer gap-4">
-                        <div class="w-10 h-10 flex justify-center items-center border border-gray-600 hover:border-black rounded-full">
-                            <i class="fas fa-location-dot text-gray-700 hover:text-black"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold">Standort</p>
-                            <p class="text-gray-600 text-lg md:text-sm">Guldental, Deutschland</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="border-t border-gray-300 text-center text-sm text-gray-500 py-4 mt-12">
-            <p>&copy; <span id="year"></span> Weingut Friedel. Alle Rechte vorbehalten.</p>
-        </div>
-    </footer>
 
     <script>
         // Demo Blog Daten
@@ -489,7 +417,7 @@
         function createBlogCard(blog, index) {
             return `
                 <a href="#" class="blog-link" onclick="openBlogDetail(${blog.id})">
-                    <div class="blog-card" style="animation-delay: ${index * 0.1}s;">
+                    <div class="blog-card rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition" style="animation-delay: ${index * 0.1}s;">
                         ${blog.image ? 
                            `<img src="${blog.image}" alt="${blog.title}" class="blog-image">` :
                             `<div class="blog-image-placeholder"><i class="fas fa-blog"></i></div>`
@@ -587,8 +515,10 @@
             filteredBlogs = [...demoBlogs];
             renderBlogs();
             
-            // Set current year
-            document.getElementById('year').textContent = new Date().getFullYear();
+            const yearEl = document.getElementById('year');
+            if (yearEl) {
+                yearEl.textContent = new Date().getFullYear();
+            }
         });
 
         // Smooth scrolling
