@@ -1,12 +1,9 @@
-/* Clean modern unified card design for Blog and Shop */
+/* Clean modern unified card design for Blog and Shop (no hover effects) */
 :root {
-  --card-bg-1: #faf9f7; /* warm light */
-  --card-bg-2: #f3f0eb; /* subtle contrast */
+  --card-bg-1: #fafaf9;
+  --card-bg-2: #f6f6f4;
   --card-border: rgba(17, 24, 39, 0.10);
-  --card-border-hover: rgba(17, 24, 39, 0.16);
-  --card-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  --card-shadow-hover: 0 24px 60px rgba(17, 24, 39, 0.16);
-  --card-tint: rgba(139, 35, 51, 0.06); /* subtle wine tint */
+  --card-shadow: 0 1px 2px rgba(0,0,0,0.02), 0 4px 14px rgba(0,0,0,0.04);
 }
 
 /* Increase grid spacing a bit for airiness */
@@ -17,37 +14,17 @@
 #blogGrid .group, #wineGrid .group {
   position: relative;
   background: linear-gradient(180deg, var(--card-bg-1), var(--card-bg-2));
-  border: 1.5px solid var(--card-border);
-  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
   box-shadow: var(--card-shadow);
-  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease, background .35s ease, outline-color .35s ease;
   overflow: hidden;
 }
 
-/* Decorative soft tint for personality without being loud */
-#blogGrid .group::before, #wineGrid .group::before {
-  content: "";
-  position: absolute;
-  inset: -40% -20% auto -40%;
-  height: 180%;
-  background:
-    radial-gradient(1200px 600px at 0% -10%, var(--card-tint), transparent 60%);
-  pointer-events: none;
-  transition: opacity .35s ease;
-  opacity: 0.9;
-}
+/* Remove decorative overlays entirely */
+#blogGrid .group::before, #wineGrid .group::before,
+#blogGrid .group::after,  #wineGrid .group::after { display: none !important; }
 
-#blogGrid .group:hover, #wineGrid .group:hover {
-  transform: translateY(-8px) !important; /* override any existing translate */
-  box-shadow: var(--card-shadow-hover);
-  border-color: var(--card-border-hover);
-}
-
-#blogGrid .group:hover::before, #wineGrid .group:hover::before {
-  opacity: 1;
-}
-
-/* Content spacing slightly larger for a modern feel */
+/* Content spacing larger for a modern feel */
 #blogGrid .group .p-6, #wineGrid .group .p-6 {
   padding: 1.75rem; /* ~28px */
   background: transparent;
@@ -62,8 +39,8 @@
 #blogGrid .group > img,
 #blogGrid .group > div:first-child,
 #wineGrid .group > div:first-child {
-  border-radius: 18px;
-  transition: transform .35s ease;
+  border-radius: 16px;
+  transition: none;
 }
 
 /* Neutralize any group-hover:scale-* utilities coming from markup */
