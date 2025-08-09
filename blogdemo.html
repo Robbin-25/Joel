@@ -6,6 +6,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weingut Friedel - Unsere Blogs</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* Unified modern card design for Blog and Shop */
+        #blogGrid .group, #wineGrid .group {
+            position: relative;
+            background: linear-gradient(180deg, #ffffff, #fafafa);
+            border: 1px solid rgba(17, 24, 39, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease, background .35s ease;
+            overflow: hidden;
+        }
+
+        #blogGrid .group:hover, #wineGrid .group:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+            border-color: rgba(17,24,39,0.12);
+            background: linear-gradient(180deg, #ffffff, #f7f7f7);
+        }
+
+        #blogGrid .group::after, #wineGrid .group::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+            transform: translateX(-100%);
+            transition: transform .6s ease;
+            pointer-events: none;
+        }
+
+        #blogGrid .group:hover::after, #wineGrid .group:hover::after {
+            transform: translateX(100%);
+        }
+
+        #blogGrid .group > img,
+        #blogGrid .group > div:first-child,
+        #wineGrid .group > div:first-child {
+            border-radius: 14px;
+            transition: transform .5s ease;
+        }
+
+        #blogGrid .group:hover > img,
+        #blogGrid .group:hover > div:first-child,
+        #wineGrid .group:hover > div:first-child {
+            transform: scale(1.06);
+        }
+
+        #blogGrid .group .p-6, #wineGrid .group .p-6 {
+            background: transparent;
+        }
+
+        #blogGrid .group .border-t, #wineGrid .group .border-t {
+            border-color: #eceff1;
+        }
+    </style>
 </head>
 <body class="bg-white min-h-screen text-gray-800 font-sans">
     <!-- NAVBAR -->
