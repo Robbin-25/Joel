@@ -6,209 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weingut Friedel - Unsere Blogs</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Navbar */
-        .nav-hamburger.active .nav-bar:nth-child(1) {
-            transform: translateY(11px) rotate(-135deg);
-        }
-        .nav-hamburger.active .nav-bar:nth-child(2) {
-            opacity: 0;
-        }
-        .nav-hamburger.active .nav-bar:nth-child(3) {
-            transform: translateY(-11px) rotate(135deg);
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: white;
-            min-height: 100vh;
-            color: #333;
-        }
-
-
-
-        h1 {
-            @apply text-left text-[#2c3e50] px-2 text-4xl;
-        }
-
-        .blog-grid {
-            margin-bottom: 40px;
-        }
-
-        .blog-link {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .blog-card {
-            overflow: hidden;
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.6s ease forwards;
-        }
-
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .blog-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .blog-image {
-            border-radius: 15px;
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-            scale: 0.9;
-        }
-
-        .blog-card:hover .blog-image {
-            transform: scale(1.05);
-        }
-
-        .blog-image-placeholder {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3rem;
-        }
-
-        .blog-content {
-            padding: 25px;
-        }
-
-        .blog-title {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            color: #2c3e50;
-            font-weight: 600;
-        }
-
-        .blog-region {
-            color: #7f8c8d;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-
-        .blog-region i {
-            margin-right: 5px;
-        }
-
-        .blog-description {
-            color: #5d6d7e;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
-
-        .blog-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #ecf0f1;
-            padding-top: 15px;
-        }
-
-        .blog-author {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            display: flex;
-            align-items: center;
-        }
-
-        .blog-author i {
-            margin-right: 5px;
-        }
-
-        .no-blogs {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-            color: #7f8c8d;
-        }
-
-        .no-blogs i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: #bdc3c7;
-        }
-
-        .no-blogs p {
-            font-size: 1.2rem;
-        }
-
-        .load-more-btn {
-            display: block;
-            margin: 40px auto;
-            padding: 15px 30px;
-            background: black;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .load-more-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px gray;
-        }
-
-        .load-more-btn.loading {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .search-input {
-            padding: 12px 20px;
-            font-size: 1rem;
-            border: 2px solid #ddd;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 1440px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .search-input:focus {
-            border-color: black;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .blog-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-                margin-bottom: 30px;
-            }
-        }
-    </style>
 </head>
-<body>
+<body class="bg-white min-h-screen text-gray-800 font-sans">
     <!-- NAVBAR -->
     <nav class="flex justify-between items-center px-8 py-4 border-b border-b-gray-300">
         <div class="text-lg font-semibold">Weingut Hermann</div>
@@ -224,10 +23,10 @@
         <button class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded hidden md:block">Warenkorb</button>
         
         <!-- Mobile Menü Button -->
-        <div id="menu-btn" class="nav-hamburger md:hidden flex flex-col cursor-pointer w-[32px] h-[25px] justify-between transition-all duration-300 z-1000" onclick="toggleMenu()">
-            <div class="nav-bar bg-black w-[32px] h-[3px] transition-all duration-300 rounded-[1px]"></div>
-            <div class="nav-bar bg-black w-[32px] h-[3px] transition-all duration-300 rounded-[1px]"></div>
-            <div class="nav-bar bg-black w-[32px] h-[3px] transition-all duration-300 rounded-[1px]"></div>
+        <div id="menu-btn" class="md:hidden flex flex-col cursor-pointer w-[32px] h-[25px] justify-between transition-all duration-300" onclick="toggleMenu()">
+            <div class="bg-black w-[32px] h-[3px] transition-all duration-300 rounded-[1px]"></div>
+            <div class="bg-black w-[32px] h-[3px] transition-all duration-300 rounded-[1px]"></div>
+            <div class="bg-black w-[32px] h-[3px] transition-all duration-300 rounded-[1px]"></div>
         </div>
     </nav>
 
@@ -244,25 +43,22 @@
         <h1 class="text-left text-[#2c3e50] px-2 text-4xl">Unsere Blogs</h1>
         
         <div class="text-center mb-8">
-            <input type="text" id="searchInput" class="search-input w-full max-w-[1440px] border-2 border-gray-200 rounded-xl px-5 py-3 focus:border-black outline-none" placeholder="Suche nach Blogs...">
+            <input type="text" id="searchInput" class="w-full max-w-[1440px] border-2 border-gray-200 rounded-xl px-5 py-3 focus:border-black outline-none" placeholder="Suche nach Blogs...">
         </div>
 
-        <div class="blog-grid grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="blogGrid">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="blogGrid">
             <!-- Demo Blog Cards werden hier eingefügt -->
         </div>
 
-        <div class="no-blogs" id="noBlogsMessage" style="display: none;">
-            <i class="fas fa-search"></i>
+        <div class="text-center py-16 text-gray-500" id="noBlogsMessage" style="display: none;">
+            <i class="fas fa-search text-5xl text-gray-300 mb-5"></i>
             <p>Keine Blogs gefunden für Ihre Suche.</p>
         </div>
 
-        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreBlogs()" style="display: none;">
+        <button class="block mx-auto my-10 px-6 py-4 bg-black text-white rounded-xl text-lg transition hover:-translate-y-0.5 hover:shadow" id="loadMoreBtn" onclick="loadMoreBlogs()" style="display: none;">
             Mehr laden
         </button>
     </div>
-
-    <!-- FOOTER -->
-
 
     <script>
         // Demo Blog Daten
@@ -388,10 +184,7 @@
             }
         });
 
-        const hamburger = document.querySelector('.nav-hamburger');
-        function toggleMenu() {
-            hamburger.classList.toggle('active');
-        }
+        function toggleMenu() {}
 
         // Blog functions
         function formatDate(dateString) {
@@ -405,22 +198,22 @@
 
         function createBlogCard(blog, index) {
             return `
-                <a href="#" class="blog-link" onclick="openBlogDetail(${blog.id})">
-                    <div class="blog-card rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition" style="animation-delay: ${index * 0.1}s;">
+                <a href="#" class="no-underline text-inherit" onclick="openBlogDetail(${blog.id})">
+                    <div class="group rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition transform hover:-translate-y-[10px]" style="animation-delay: ${index * 0.1}s;">
                         ${blog.image ? 
-                           `<img src="${blog.image}" alt="${blog.title}" class="blog-image w-full h-[300px] object-cover rounded-[15px] transition-transform">` :
-                            `<div class="blog-image-placeholder w-full h-[300px] flex items-center justify-center text-white text-5xl rounded-[15px]"><i class="fas fa-blog"></i></div>`
+                           `<img src="${blog.image}" alt="${blog.title}" class="w-full h-[300px] object-cover rounded-[15px] transition-transform group-hover:scale-105">` :
+                            `<div class="w-full h-[300px] bg-gradient-to-br from-indigo-400 to-purple-600 flex items-center justify-center text-white text-5xl rounded-[15px] transition-transform group-hover:scale-105"><i class="fas fa-blog"></i></div>`
                         }
-                        <div class="blog-content p-6">
-                            <h3 class="blog-title text-[1.4rem] mb-2 text-[#2c3e50] font-semibold">${blog.title}</h3>
-                            <div class="blog-region text-[#7f8c8d] mb-4 text-[0.9rem] flex items-center">
-                                <i class="fas fa-calendar-alt"></i>
+                        <div class="p-6">
+                            <h3 class="text-[1.4rem] mb-2 text-[#2c3e50] font-semibold">${blog.title}</h3>
+                            <div class="text-[#7f8c8d] mb-4 text-[0.9rem] flex items-center">
+                                <i class="fas fa-calendar-alt mr-1"></i>
                                 ${formatDate(blog.created_at)}
                             </div>
-                            <p class="blog-description text-[#5d6d7e] leading-6 mb-5 text-[0.95rem]">${blog.summary.length > 150 ? blog.summary.substring(0, 150) + '...' : blog.summary}</p>
-                            <div class="blog-footer flex justify-between items-center border-t border-[#ecf0f1] pt-4">
-                                <div class="blog-author">
-                                    <i class="fas fa-user"></i>
+                            <p class="text-[#5d6d7e] leading-6 mb-5 text-[0.95rem]">${blog.summary.length > 150 ? blog.summary.substring(0, 150) + '...' : blog.summary}</p>
+                            <div class="flex justify-between items-center border-t border-[#ecf0f1] pt-4">
+                                <div class="text-[0.9rem] text-[#7f8c8d] flex items-center">
+                                    <i class="fas fa-user mr-1"></i>
                                     ${blog.blogname}
                                 </div>
                             </div>
@@ -457,13 +250,13 @@
 
         function loadMoreBlogs() {
             const loadMoreBtn = document.getElementById('loadMoreBtn');
-            loadMoreBtn.classList.add('loading');
+            loadMoreBtn.classList.add('opacity-70', 'cursor-not-allowed');
             loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Lädt...';
 
             setTimeout(() => {
                 currentPage++;
                 renderBlogs();
-                loadMoreBtn.classList.remove('loading');
+                loadMoreBtn.classList.remove('opacity-70', 'cursor-not-allowed');
                 loadMoreBtn.innerHTML = 'Mehr laden';
             }, 800);
         }
@@ -503,11 +296,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             filteredBlogs = [...demoBlogs];
             renderBlogs();
-            
-            const yearEl = document.getElementById('year');
-            if (yearEl) {
-                yearEl.textContent = new Date().getFullYear();
-            }
         });
 
         // Smooth scrolling
