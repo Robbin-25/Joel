@@ -100,12 +100,11 @@
         }
 
         .wine-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-10px);
         }
 
-        .wine-card:hover .wine-image,
-        .wine-card:hover .wine-image-placeholder {
-            transform: scale(1.02);
+        .wine-card:hover .wine-image {
+            transform: scale(1.05);
         }
 
         .wine-card.hidden {
@@ -400,7 +399,8 @@
 
         .add-to-cart-btn:hover {
             background: #333;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px gray;
         }
 
         @media (min-width: 768px) {
@@ -1238,7 +1238,7 @@
     // Funktion zum Erstellen einer Weinkarte
     function createWineCard(wine, index) {
         const wineCard = document.createElement('div');
-        wineCard.className = 'wine-card rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition overflow-hidden';
+        wineCard.className = 'wine-card transition';
         wineCard.style.opacity = '0';
         wineCard.style.transform = 'translateY(20px)';
         wineCard.style.animationDelay = `${index * 0.1}s`;
