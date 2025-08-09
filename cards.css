@@ -1,52 +1,74 @@
-/* Unified modern card design for Blog and Shop */
+/* Clean modern unified card design for Blog and Shop */
+:root {
+  --card-bg-1: #faf9f7; /* warm light */
+  --card-bg-2: #f3f0eb; /* subtle contrast */
+  --card-border: rgba(17, 24, 39, 0.10);
+  --card-border-hover: rgba(17, 24, 39, 0.16);
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  --card-shadow-hover: 0 24px 60px rgba(17, 24, 39, 0.16);
+  --card-tint: rgba(139, 35, 51, 0.06); /* subtle wine tint */
+}
+
+/* Increase grid spacing a bit for airiness */
+#blogGrid, #wineGrid {
+  gap: 28px !important;
+}
+
 #blogGrid .group, #wineGrid .group {
-    position: relative;
-    background: linear-gradient(180deg, #ffffff, #fafafa);
-    border: 1px solid rgba(17, 24, 39, 0.08);
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease, background .35s ease;
-    overflow: hidden;
+  position: relative;
+  background: linear-gradient(180deg, var(--card-bg-1), var(--card-bg-2));
+  border: 1.5px solid var(--card-border);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease, background .35s ease, outline-color .35s ease;
+  overflow: hidden;
+}
+
+/* Decorative soft tint for personality without being loud */
+#blogGrid .group::before, #wineGrid .group::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto -40%;
+  height: 180%;
+  background:
+    radial-gradient(1200px 600px at 0% -10%, var(--card-tint), transparent 60%);
+  pointer-events: none;
+  transition: opacity .35s ease;
+  opacity: 0.9;
 }
 
 #blogGrid .group:hover, #wineGrid .group:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
-    border-color: rgba(17,24,39,0.12);
-    background: linear-gradient(180deg, #ffffff, #f7f7f7);
+  transform: translateY(-8px) !important; /* override any existing translate */
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--card-border-hover);
 }
 
-#blogGrid .group::after, #wineGrid .group::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
-    transform: translateX(-100%);
-    transition: transform .6s ease;
-    pointer-events: none;
+#blogGrid .group:hover::before, #wineGrid .group:hover::before {
+  opacity: 1;
 }
 
-#blogGrid .group:hover::after, #wineGrid .group:hover::after {
-    transform: translateX(100%);
+/* Content spacing slightly larger for a modern feel */
+#blogGrid .group .p-6, #wineGrid .group .p-6 {
+  padding: 1.75rem; /* ~28px */
+  background: transparent;
 }
 
+/* Subtle section separator color */
+#blogGrid .group .border-t, #wineGrid .group .border-t {
+  border-color: #e7e5e4;
+}
+
+/* Media corners & prevent unintended scale from Tailwind utility classes */
 #blogGrid .group > img,
 #blogGrid .group > div:first-child,
 #wineGrid .group > div:first-child {
-    border-radius: 14px;
-    transition: transform .5s ease;
+  border-radius: 18px;
+  transition: transform .35s ease;
 }
 
+/* Neutralize any group-hover:scale-* utilities coming from markup */
 #blogGrid .group:hover > img,
 #blogGrid .group:hover > div:first-child,
 #wineGrid .group:hover > div:first-child {
-    transform: scale(1.06);
-}
-
-#blogGrid .group .p-6, #wineGrid .group .p-6 {
-    background: transparent;
-}
-
-#blogGrid .group .border-t, #wineGrid .group .border-t {
-    border-color: #eceff1;
+  transform: none !important;
 }
