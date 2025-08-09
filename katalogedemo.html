@@ -81,18 +81,19 @@
         /* Wine Catalog Styles */
         .wine-grid {
             display: grid;
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .wine-card {
-            background: transparent;
-            border-radius: 0;
-            overflow: visible;
-            border: none;
-            box-shadow: none;
-            transition: transform 0.3s ease;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb; /* border-gray-200 */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             opacity: 0;
             transform: translateY(20px);
@@ -101,6 +102,12 @@
 
         .wine-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .wine-card:hover .wine-image,
+        .wine-card:hover .wine-image-placeholder {
+            transform: scale(1.05);
         }
 
         .wine-card.hidden {
@@ -117,20 +124,17 @@
         .wine-image {
             z-index: 20;
             width: 100%;
-            height: 280px;
+            height: 300px;
             object-fit: cover;
             transition: transform 0.3s ease;
-            border-radius: 16px;
-        }
-
-        .wine-card:hover .wine-image {
-            transform: scale(1.05);
+            scale: 0.9;
+            border-radius: 15px;
         }
 
         .wine-image-placeholder {
             z-index: 20;
             width: 100%;
-            height: 280px;
+            height: 300px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
@@ -138,16 +142,13 @@
             color: white;
             font-size: 3rem;
             transition: transform 0.3s ease;
-            border-radius: 16px;
-        }
-
-        .wine-card:hover .wine-image-placeholder {
-            transform: scale(1.05);
+            scale: 0.9;
+            border-radius: 15px;
         }
 
         .wine-content {
-            padding: 16px 4px 0 4px;
-            background: transparent;
+            padding: 25px;
+            background: white;
         }
 
         .wine-title {
@@ -180,8 +181,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 12px;
-            padding-top: 8px;
+            margin-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 15px;
         }
 
         .wine-price {
@@ -209,6 +211,13 @@
             font-weight: normal;
         }
 
+        .search-filter-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+
         .search-input {
             padding: 12px 20px;
             font-size: 1rem;
@@ -224,7 +233,109 @@
             border-color: black;
         }
 
-        .filter-panel { display:none; }
+        .filter-btn {
+            padding: 12px 24px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #555;
+        }
+
+        .filter-panel {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .filter-panel.active {
+            display: block;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .filter-option input[type="checkbox"] {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .filter-option label {
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .price-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-input {
+            width: 80px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .apply-btn {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+
+        .apply-btn:hover {
+            background: #555;
+        }
 
         /* Pagination Styles */
         .pagination-container {
@@ -257,6 +368,13 @@
             cursor: not-allowed;
         }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+
         .no-wines {
             text-align: center;
             color: #666;
@@ -275,48 +393,48 @@
             background: #000;
             color: white;
             border: none;
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-size: 1rem;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .add-to-cart-btn:hover {
             background: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px gray;
+            transform: translateY(-1px);
         }
 
-        @media (min-width: 768px) {
-            .wine-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-        @media (min-width: 1024px) {
-            .wine-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-        }
         @media (max-width: 768px) {
             .filter-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
             h1 {
-                font-size: 2rem;
+                font-size: 36px;
             }
+            
             .wine-grid {
                 grid-template-columns: 1fr;
-                gap: 1.25rem;
+                gap: 20px;
                 padding: 0 10px;
             }
+            
+            .search-filter-container {
+                flex-direction: column;
+            }
         }
+
         @media (max-width: 480px) {
             .filter-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .search-filter-container {
+                flex-direction: column;
             }
         }
     </style>
@@ -803,6 +921,10 @@
     </button>
 </div>
 
+
+
+
+
 <script>
     // Warenkorb State (in-memory storage)
     let cart = [];
@@ -811,12 +933,48 @@
 
     // Demo Wine Data für "Mehr anzeigen" Feature
     const additionalWines = [
-        { id: 10, name: "Chardonnay 2022", price: 22.90, description: "Ein vollmundiger Weißwein mit Noten von Vanille und Butter. Im Barrique gereift mit einem cremigen und langanhaltenden Finish.", image: "https://via.placeholder.com/250x250/FFFFE0/999999?text=Chardonnay" },
-        { id: 11, name: "Portugieser 2022", price: 13.80, description: "Ein leichter Rotwein mit fruchtigen Aromen von Kirschen und Pflaumen. Weich und zugänglich, ideal als Sommerwein.", image: "https://via.placeholder.com/250x250/DC143C/FFFFFF?text=Portugieser" },
-        { id: 12, name: "Kerner 2023", price: 14.50, description: "Ein aromatischer Weißwein mit Muskatnoten und feiner Säure. Frisch und blumig mit einem angenehmen Nachgeschmack.", image: "https://via.placeholder.com/250x250/F5FFFA/999999?text=Kerner" },
-        { id: 13, name: "Lemberger 2021", price: 26.90, description: "Ein kraftvoller Rotwein mit intensiver Struktur und Aromen von dunklen Früchten und Gewürzen. Lagerfähig und komplex.", image: "https://via.placeholder.com/250x250/800000/FFFFFF?text=Lemberger" },
-        { id: 14, name: "Weißburgunder 2023", price: 18.50, description: "Ein eleganter Weißwein mit feiner Säure und Aromen von grünen Äpfeln und Zitrus. Trocken und mineralisch.", image: "https://via.placeholder.com/250x250/F8F8FF/999999?text=Weißburgunder" },
-        { id: 15, name: "Regent 2022", price: 20.80, description: "Ein moderner Rotwein mit kräftiger Farbe und Aromen von Brombeeren und Cassis. Vollmundig mit samtigen Tanninen.", image: "https://via.placeholder.com/250x250/4B0049/FFFFFF?text=Regent" }
+        {
+            id: 10,
+            name: "Chardonnay 2022",
+            price: 22.90,
+            description: "Ein vollmundiger Weißwein mit Noten von Vanille und Butter. Im Barrique gereift mit einem cremigen und langanhaltenden Finish.",
+            image: "https://via.placeholder.com/250x250/FFFFE0/999999?text=Chardonnay"
+        },
+        {
+            id: 11,
+            name: "Portugieser 2022",
+            price: 13.80,
+            description: "Ein leichter Rotwein mit fruchtigen Aromen von Kirschen und Pflaumen. Weich und zugänglich, ideal als Sommerwein.",
+            image: "https://via.placeholder.com/250x250/DC143C/FFFFFF?text=Portugieser"
+        },
+        {
+            id: 12,
+            name: "Kerner 2023",
+            price: 14.50,
+            description: "Ein aromatischer Weißwein mit Muskatnoten und feiner Säure. Frisch und blumig mit einem angenehmen Nachgeschmack.",
+            image: "https://via.placeholder.com/250x250/F5FFFA/999999?text=Kerner"
+        },
+        {
+            id: 13,
+            name: "Lemberger 2021",
+            price: 26.90,
+            description: "Ein kraftvoller Rotwein mit intensiver Struktur und Aromen von dunklen Früchten und Gewürzen. Lagerfähig und komplex.",
+            image: "https://via.placeholder.com/250x250/800000/FFFFFF?text=Lemberger"
+        },
+        {
+            id: 14,
+            name: "Weißburgunder 2023",
+            price: 18.50,
+            description: "Ein eleganter Weißwein mit feiner Säure und Aromen von grünen Äpfeln und Zitrus. Trocken und mineralisch.",
+            image: "https://via.placeholder.com/250x250/F8F8FF/999999?text=Weißburgunder"
+        },
+        {
+            id: 15,
+            name: "Regent 2022",
+            price: 20.80,
+            description: "Ein moderner Rotwein mit kräftiger Farbe und Aromen von Brombeeren und Cassis. Vollmundig mit samtigen Tanninen.",
+            image: "https://via.placeholder.com/250x250/4B0049/FFFFFF?text=Regent"
+        }
     ];
 
     // DOM Elemente
@@ -1072,13 +1230,20 @@
             if (additionalWines.length === 0) {
                 loadMoreBtn.style.display = 'none';
             }
+            
+            // Update pagination info
+            const paginationInfo = document.querySelector('.pagination-info');
+            const totalItems = 15;
+            const itemsShown = Math.min(currentWineIndex, totalItems);
+            paginationInfo.textContent = `Zeige ${itemsShown} von ${totalItems} Weinen`;
+            
         }, 800);
     }
 
     // Funktion zum Erstellen einer Weinkarte
     function createWineCard(wine, index) {
         const wineCard = document.createElement('div');
-        wineCard.className = 'wine-card transition';
+        wineCard.className = 'wine-card rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition overflow-hidden';
         wineCard.style.opacity = '0';
         wineCard.style.transform = 'translateY(20px)';
         wineCard.style.animationDelay = `${index * 0.1}s`;
