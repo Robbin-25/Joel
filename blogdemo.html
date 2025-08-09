@@ -6,7 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weingut Friedel - Unsere Blogs</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="cards.css" />
+    <style>
+        /* Freestanding modern cards for Blog & Shop (no borders, no background, no hover) */
+        #blogGrid, #wineGrid { gap: 32px !important; }
+        #blogGrid .group, #wineGrid .group {
+          background: transparent !important;
+          border: none !important;
+          border-radius: 20px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.04) !important;
+          overflow: visible !important;
+        }
+        #blogGrid .group .p-6, #wineGrid .group .p-6 {
+          padding: 1.75rem;
+          background: transparent !important;
+        }
+        #blogGrid .group .border-t, #wineGrid .group .border-t {
+          border-color: rgba(17, 24, 39, 0.08);
+        }
+        #blogGrid .group > img,
+        #blogGrid .group > div:first-child,
+        #wineGrid .group > div:first-child {
+          border-radius: 16px;
+          overflow: hidden;
+        }
+        #blogGrid .group:hover > img,
+        #blogGrid .group:hover > div:first-child,
+        #wineGrid .group:hover > div:first-child { transform: none !important; }
+    </style>
 </head>
 <body class="bg-white min-h-screen text-gray-800 font-sans">
     <!-- NAVBAR -->
